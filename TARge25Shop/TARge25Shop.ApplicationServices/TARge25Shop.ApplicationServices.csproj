@@ -4,7 +4,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>TARge25ShopApplicationServices</RootNamespace>
+        <RootNamespace>TARge25Shop.ApplicationServices</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
