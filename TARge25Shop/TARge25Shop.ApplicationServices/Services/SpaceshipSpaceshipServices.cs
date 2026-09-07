@@ -1,3 +1,4 @@
+using TARge25Shop.Core;
 using TARge25Shop.Core.Domain;
 using TARge25Shop.Core.Dto;
 using TARge25Shop.Data;
@@ -5,11 +6,11 @@ using TARge25Shop.Data;
 namespace TARge25Shop.ApplicationServices.Services;
 
 
-public class SpaceshipServices
+public class SpaceshipSpaceshipServices : ISpaceshipServiceInterface
 {
     private readonly TARge25ShopContext _dbContext;
 
-    public SpaceshipServices(TARge25ShopContext dbContext)
+    public SpaceshipSpaceshipServices(TARge25ShopContext dbContext)
     {
         _dbContext = dbContext;
     }
