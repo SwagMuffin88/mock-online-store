@@ -8,8 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Domain\" />
-      <Folder Include="Dto\" />
       <Folder Include="ServiceInterface\" />
     </ItemGroup>
 
