@@ -1,8 +1,10 @@
+@using TARge25Shop.Core.Domain
 @model TARge25Shop.Models.Spaceship.SpaceshipCreateViewModel
+@* todo rename model *@
 
 <div>
     <h1>Spaceships Index</h1>
-    
+
     <a asp-action="CreateIndex"
        asp-controller="Spaceship"
        type="submit"
@@ -11,22 +13,27 @@
 </div>
 <div>
     <h2>All spaceships</h2>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Nr</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Build date</th>
-                <th>Crew</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>test</td>
-            </tr>
-        </tbody>
-        
-    </table>
+    <form method="get">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Nr</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Build date</th>
+                    <th scope="col">Crew</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach(var spaceship in Model) {
+                <tr>
+                    <td>Spaceship nr.</td>
+                    <td>@spaceship.Name</td>
+                </tr>
+            }
+            </tbody>
+
+        </table>
+    </form>
 </div>
