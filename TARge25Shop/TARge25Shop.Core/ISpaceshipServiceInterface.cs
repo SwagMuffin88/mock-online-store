@@ -5,5 +5,5 @@ namespace TARge25Shop.Core;
 
 public interface ISpaceshipServiceInterface
 {
-    Task<Spaceship?> Create(SpaceshipDto spaceshipDto);
+    Task<Spaceship> Create(SpaceshipDto dto);
 }
