@@ -1,18 +1,11 @@
 @model TARge25Shop.Models.Spaceship.SpaceshipCreateViewModel
 
 <div>
+    <h1>Spaceships Index</h1>
+    
     <a asp-action="CreateIndex"
        asp-controller="Spaceship"
        type="submit"
-       class="btn btn-primary"
-    >Create
+       class="btn btn-primary">Create
     </a>
-    
-    <div>
-        Create new Spaceship
-    </div>
-
-    <form method="post" enctype="multipart/form-data">
-        <input asp-for="Id" type="text">
-    </form>
 </div>

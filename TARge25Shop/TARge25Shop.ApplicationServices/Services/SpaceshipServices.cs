@@ -19,7 +19,8 @@ public class SpaceshipServices : ISpaceshipServiceInterface
     {
         var spaceship = new Spaceship
         {
-            Id = spaceshipDto.Id,
+            //Id = spaceshipDto.Id, -> works either way? kusagil genereerib automaatselt isegi ilma meetodita.
+            Id = Guid.NewGuid(),
             Name = spaceshipDto.Name,
             ShipType = spaceshipDto.ShipType,
             MaxCrewSize = spaceshipDto.MaxCrewSize,
