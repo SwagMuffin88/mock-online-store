@@ -1,3 +1,8 @@
+using TARge25Shop.ApplicationServices.Services;
+using TARge25Shop.Core;
+using TARge25Shop.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace TARge25Shop
 {
     public class Program
@@ -8,6 +13,13 @@ namespace TARge25Shop
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            
+            builder.Services.AddScoped<ISpaceshipServiceInterface, SpaceshipServices>();
+            
+            builder.Services.AddDbContext<TARge25ShopContext>(options =>
+                options.UseSqlite(
+                    builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
             var app = builder.Build();
 
