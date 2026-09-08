@@ -19,8 +19,13 @@ public class SpaceshipServices : ISpaceshipServiceInterface
     {
         var spaceship = new Spaceship
         {
-            //Id = spaceshipDto.Id, -> works either way? kusagil genereerib automaatselt isegi ilma meetodita.
             Id = Guid.NewGuid(),
+            /* Märkus:
+             * Kui Spaceship klassis on Id tüübiks Guid, genereerib Entity Framework Core sellele ise uue
+             * väärtuse (Guid.NewGuid()), kui sa seda ise koodis ei määra. Seega käsitsi spaceship.Id = Guid.NewGuid();
+             * kirjutamine ei ole tegelikult kohustuslik, kuid koodis pole see ka viga.
+             */
+            
             Name = spaceshipDto.Name,
             ShipType = spaceshipDto.ShipType,
             MaxCrewSize = spaceshipDto.MaxCrewSize,
@@ -28,10 +33,17 @@ public class SpaceshipServices : ISpaceshipServiceInterface
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
         };
-
-        _dbContext.Add(spaceship);
-        await _dbContext.SaveChangesAsync();
-
-        return spaceship;
+        try
+        {
+            _dbContext.Add(spaceship);
+            await _dbContext.SaveChangesAsync();
+            
+            return spaceship;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error saving new spaceship: {e.Message}");
+            return null;
+        }
     }
 }

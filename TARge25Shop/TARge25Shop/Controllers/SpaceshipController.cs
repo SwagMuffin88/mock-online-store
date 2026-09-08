@@ -28,6 +28,11 @@ public class SpaceshipController : Controller
     [HttpPost]
     public async Task<IActionResult> CreateNewSpaceship(SpaceshipCreateViewModel viewmodel)
     {
+        if (!ModelState.IsValid)
+        {
+            return View(viewmodel);
+        }
+        
         var dto = new SpaceshipDto
         {
             Name = viewmodel.Name,
@@ -35,9 +40,17 @@ public class SpaceshipController : Controller
             MaxCrewSize = viewmodel.MaxCrewSize,
             EnginePower = viewmodel.EnginePower
         };
+        
+        var result = await _spaceshipService.Create(dto);
 
-        var spaceship = await _spaceshipService.Create(dto);
-        return RedirectToAction("Index", "Spaceship", new { id = spaceship.Id });
+        if (result == null)
+        {
+            ModelState.AddModelError(
+                string.Empty, "Could not create spaceship! Check your fields and try again."
+            );
+        }
+        
+        return RedirectToAction("Index", "Spaceship", new { id = result.Id });
     }
     
 }
