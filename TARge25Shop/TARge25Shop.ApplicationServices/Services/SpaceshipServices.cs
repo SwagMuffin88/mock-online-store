@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using TARge25Shop.Core;
 using TARge25Shop.Core.Domain;
 using TARge25Shop.Core.Dto;
@@ -45,5 +46,22 @@ public class SpaceshipServices : ISpaceshipServiceInterface
             Console.WriteLine($"Error saving new spaceship: {e.Message}");
             return null;
         }
+    }
+
+    public async Task<Spaceship?> Update(SpaceshipDto dto)
+    {
+        var spaceship = await _dbContext.Spaceships.FirstOrDefaultAsync(s => s.Id == dto.Id);
+
+        spaceship.Name = dto.Name;
+        spaceship.ShipType = dto.ShipType;
+        spaceship.MaxCrewSize = dto.MaxCrewSize;
+        spaceship.EnginePower = dto.EnginePower;
+        spaceship.CreatedAt = dto.CreatedAt;
+        spaceship.UpdatedAt = DateTime.Now;
+        
+        _dbContext.Update(spaceship);
+        await _dbContext.SaveChangesAsync();
+           
+        return spaceship;
     }
 }

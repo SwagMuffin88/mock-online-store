@@ -69,5 +69,30 @@ public class SpaceshipController : Controller
         
         return RedirectToAction("Index", "Spaceship", new { id = result.Id });
     }
+
+    public async Task<IActionResult> Update(SpaceshipUpdateViewModel viewmodel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(viewmodel);
+        }
+
+        var dto = new SpaceshipDto
+        {
+            Id = viewmodel.Id,
+            Name = viewmodel.Name,
+            ShipType = viewmodel.ShipType,
+            MaxCrewSize = viewmodel.MaxCrewSize,
+            EnginePower = viewmodel.EnginePower
+        };
+        var result = await _spaceshipService.Update(dto);
+
+        if (result == null)
+        {
+            return NotFound();
+        }
+        
+        return RedirectToAction(nameof(Index));
+    }
     
 }
