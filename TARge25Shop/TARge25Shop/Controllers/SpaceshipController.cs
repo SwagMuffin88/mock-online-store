@@ -1,32 +1,49 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TARge25Shop.Core;
 using TARge25Shop.Models.Spaceship;
 using TARge25Shop.Core.Dto;
+using TARge25Shop.Data;
 
 namespace TARge25Shop.Controllers;
 
 public class SpaceshipController : Controller
 {
     private readonly ISpaceshipServiceInterface _spaceshipService;
+    private readonly TARge25ShopContext _dbContext;
 
-    public SpaceshipController(ISpaceshipServiceInterface spaceshipService)
+    public SpaceshipController(ISpaceshipServiceInterface spaceshipService, TARge25ShopContext dbContext)
     {
         _spaceshipService = spaceshipService;
+        _dbContext = dbContext;
     }
     
-    public IActionResult Index()
+    [HttpGet]
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var result = _dbContext.Spaceships
+            .Select(s => new SpaceshipIndexViewModel 
+            {
+                Id = s.Id,
+                Name = s.Name,
+                ShipType = s.ShipType,
+                MaxCrewSize = s.MaxCrewSize,
+                EnginePower = s.EnginePower,
+                UpdatedAt = s.UpdatedAt,
+                CreatedAt =   s.CreatedAt
+            });
+        
+        return View("Index", await result.ToListAsync());
     }
 
     [HttpGet]
-    public IActionResult CreateIndex()
+    public IActionResult Create()
     {
         return View();
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateNewSpaceship(SpaceshipCreateViewModel viewmodel)
+    public async Task<IActionResult> Create(SpaceshipCreateViewModel viewmodel)
     {
         if (!ModelState.IsValid)
         {

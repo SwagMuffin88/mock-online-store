@@ -1,16 +1,15 @@
 @using TARge25Shop.Core.Domain
 @model IEnumerable<TARge25Shop.Models.Spaceship.SpaceshipIndexViewModel>
-@* todo rename model *@
 
 <div>
     <h1>Spaceships Index</h1>
-
-    <a asp-action="CreateIndex"
+    <a asp-action="Create"
        asp-controller="Spaceship"
-       type="submit"
-       class="btn btn-primary">Create
+       class="btn btn-primary">
+        Create
     </a>
 </div>
+
 <div>
     <h2>All spaceships</h2>
     <form method="get">
@@ -26,17 +25,19 @@
                 </tr>
             </thead>
             <tbody>
-            @foreach(var spaceship in Model) { 
+            @{ int i = 1; }
+            @foreach (var spaceship in Model)
+            {
                 <tr>
-                    <td>Spaceship nr.</td>
+                    <td>@(i++)</td>
                     <td>@spaceship.Name</td>
                     <td>@spaceship.ShipType</td>
                     <td>@spaceship.CreatedAt</td>
                     <td>@spaceship.MaxCrewSize</td>
                     <td>
-                        <a asp-action="details" asp-controller="spaceships" asp-route-id="@spaceship.Id" class="btn btn-primary">Details</a>
-                        <a asp-action="update" asp-controller="spaceships" asp-route-id="@spaceship.Id" class="btn btn-primary">Update</a>
-                        <a asp-action="delete" asp-controller="spaceships" asp-route-id="@spaceship.Id" class="btn btn-outline-danger">Delete</a>
+                        <a asp-action="Details" asp-controller="Spaceship" asp-route-id="@spaceship.Id" class="btn btn-primary">Details</a>
+                        <a asp-action="update" asp-controller="spaceship" asp-route-id="@spaceship.Id" class="btn btn-primary">Update</a>
+                        <a asp-action="delete" asp-controller="spaceship" asp-route-id="@spaceship.Id" class="btn btn-outline-danger">Delete</a>
                     </td>
                 </tr>
             }
