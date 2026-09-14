@@ -1,5 +1,5 @@
 @using TARge25Shop.Core.Domain
-@model TARge25Shop.Models.Spaceship.SpaceshipCreateViewModel
+@model IEnumerable<TARge25Shop.Models.Spaceship.SpaceshipIndexViewModel>
 @* todo rename model *@
 
 <div>
@@ -26,10 +26,18 @@
                 </tr>
             </thead>
             <tbody>
-            @foreach(var spaceship in Model) {
+            @foreach(var spaceship in Model) { 
                 <tr>
                     <td>Spaceship nr.</td>
                     <td>@spaceship.Name</td>
+                    <td>@spaceship.ShipType</td>
+                    <td>@spaceship.CreatedAt</td>
+                    <td>@spaceship.MaxCrewSize</td>
+                    <td>
+                        <a asp-action="details" asp-controller="spaceships" asp-route-id="@spaceship.Id" class="btn btn-primary">Details</a>
+                        <a asp-action="update" asp-controller="spaceships" asp-route-id="@spaceship.Id" class="btn btn-primary">Update</a>
+                        <a asp-action="delete" asp-controller="spaceships" asp-route-id="@spaceship.Id" class="btn btn-outline-danger">Delete</a>
+                    </td>
                 </tr>
             }
             </tbody>
