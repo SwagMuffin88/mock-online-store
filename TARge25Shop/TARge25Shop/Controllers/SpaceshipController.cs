@@ -41,6 +41,12 @@ public class SpaceshipController : Controller
     {
         return View();
     }
+    
+    [HttpGet]
+    public IActionResult Update()
+    {
+        return View();
+    }
 
     [HttpPost]
     public async Task<IActionResult> Create(SpaceshipCreateViewModel viewmodel)
@@ -52,10 +58,12 @@ public class SpaceshipController : Controller
         
         var dto = new SpaceshipDto
         {
+            Id = viewmodel.Id,
             Name = viewmodel.Name,
             ShipType = viewmodel.ShipType,
             MaxCrewSize = viewmodel.MaxCrewSize,
-            EnginePower = viewmodel.EnginePower
+            EnginePower = viewmodel.EnginePower,
+            CreatedAt = viewmodel.CreatedAt
         };
         
         var result = await _spaceshipService.Create(dto);
@@ -70,6 +78,7 @@ public class SpaceshipController : Controller
         return RedirectToAction("Index", "Spaceship", new { id = result.Id });
     }
 
+    // TODO fix bug: update does not interact with db
     public async Task<IActionResult> Update(SpaceshipUpdateViewModel viewmodel)
     {
         if (!ModelState.IsValid)

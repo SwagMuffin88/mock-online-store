@@ -59,7 +59,7 @@ public class SpaceshipServices : ISpaceshipServiceInterface
         spaceship.CreatedAt = dto.CreatedAt;
         spaceship.UpdatedAt = DateTime.Now;
         
-        _dbContext.Update(spaceship);
+        _dbContext.Spaceships.Update(spaceship);
         await _dbContext.SaveChangesAsync();
            
         return spaceship;
