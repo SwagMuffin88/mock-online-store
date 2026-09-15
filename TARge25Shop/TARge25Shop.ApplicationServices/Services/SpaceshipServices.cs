@@ -73,4 +73,14 @@ public class SpaceshipServices : ISpaceshipServiceInterface
 
         return spaceship;
     }
+
+    public async Task<Spaceship?> Delete(Guid id)
+    {
+        var result = await DetailAsync(id);
+
+        _dbContext.Spaceships.Remove(result);
+        await _dbContext.SaveChangesAsync();
+
+        return result;
+    }
 }
