@@ -111,9 +111,11 @@ public class SpaceshipController : Controller
             Name = viewmodel.Name,
             ShipType = viewmodel.ShipType,
             MaxCrewSize = viewmodel.MaxCrewSize,
-            EnginePower = viewmodel.EnginePower
+            EnginePower = viewmodel.EnginePower,
+            CreatedAt = viewmodel.CreatedAt,
+            UpdatedAt = viewmodel.UpdatedAt
         };
-        var result = await _spaceshipService.Update(dto);
+        var result = await _spaceshipService.Update(dto); 
 
         if (result == null)
         {
