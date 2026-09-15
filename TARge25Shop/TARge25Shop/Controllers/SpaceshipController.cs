@@ -125,4 +125,41 @@ public class SpaceshipController : Controller
         return RedirectToAction(nameof(Index));
     }
     
+    [HttpGet]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var spaceship = await _spaceshipService.DetailAsync(id);
+
+        if (spaceship == null)
+        {
+            return NotFound();
+        }
+
+        var viewModel = new SpaceshipDeleteViewModel
+        {
+            Id = spaceship.Id,
+            Name = spaceship.Name,
+            ShipType = spaceship.ShipType,
+            MaxCrewSize = spaceship.MaxCrewSize,
+            EnginePower = spaceship.EnginePower,
+            CreatedAt = spaceship.CreatedAt,
+            UpdatedAt = spaceship.UpdatedAt
+        };
+
+        return View(viewModel);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> DeleteConfirmation(Guid id)
+    {
+        var spaceship = await _spaceshipService.Delete(id);
+        
+        if (spaceship == null)
+        {
+            return NotFound();
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+    
 }
