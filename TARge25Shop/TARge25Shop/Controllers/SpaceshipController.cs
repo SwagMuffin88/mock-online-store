@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TARge25Shop.Core;
+using TARge25Shop.Core.Domain;
 using TARge25Shop.Models.Spaceship;
 using TARge25Shop.Core.Dto;
 using TARge25Shop.Data;
@@ -77,8 +78,32 @@ public class SpaceshipController : Controller
         
         return RedirectToAction("Index", "Spaceship", new { id = result.Id });
     }
-
-    // TODO fix bug: update does not interact with db
+    
+    [HttpGet]
+    public async Task<IActionResult> Update(Guid id)
+    {
+        var spaceship = await _spaceshipService.DetailAsync(id);
+        
+        if (spaceship == null) 
+        {
+            return NotFound();
+        } 
+        
+        var viewmodel = new SpaceshipUpdateViewModel
+        {
+            Id = spaceship.Id,
+            Name = spaceship.Name,
+            ShipType = spaceship.ShipType,
+            MaxCrewSize = spaceship.MaxCrewSize,
+            EnginePower = spaceship.EnginePower,
+            CreatedAt = spaceship.CreatedAt,
+            UpdatedAt = spaceship.UpdatedAt
+        };
+        
+        return View(viewmodel);
+    }
+        
+    [HttpPost]
     public async Task<IActionResult> Update(SpaceshipUpdateViewModel viewmodel)
     {
         if (!ModelState.IsValid)

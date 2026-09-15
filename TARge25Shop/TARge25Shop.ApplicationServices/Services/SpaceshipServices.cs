@@ -50,8 +50,9 @@ public class SpaceshipServices : ISpaceshipServiceInterface
 
     public async Task<Spaceship?> Update(SpaceshipDto dto)
     {
-        var spaceship = await _dbContext.Spaceships.FirstOrDefaultAsync(s => s.Id == dto.Id);
+        var spaceship = new Spaceship();
 
+        spaceship.Id = dto.Id;
         spaceship.Name = dto.Name;
         spaceship.ShipType = dto.ShipType;
         spaceship.MaxCrewSize = dto.MaxCrewSize;
@@ -62,6 +63,14 @@ public class SpaceshipServices : ISpaceshipServiceInterface
         _dbContext.Spaceships.Update(spaceship);
         await _dbContext.SaveChangesAsync();
            
+        return spaceship;
+    }
+    
+    public async Task<Spaceship?> DetailAsync(Guid id)
+    {
+        var spaceship = await _dbContext.Spaceships
+            .FirstOrDefaultAsync(x => x.Id == id);
+
         return spaceship;
     }
 }
