@@ -43,28 +43,22 @@ public class SpaceshipController : Controller
         return View();
     }
     
-    [HttpGet]
-    public IActionResult Update()
-    {
-        return View();
-    }
-
     [HttpPost]
     public async Task<IActionResult> Create(SpaceshipCreateViewModel viewmodel)
     {
-        if (!ModelState.IsValid)
-        {
-            return View(viewmodel);
-        }
+        // if (!ModelState.IsValid)
+        // {
+        //     return View(viewmodel);
+        // }
         
         var dto = new SpaceshipDto
         {
-            Id = viewmodel.Id,
+            // Id = viewmodel.Id,
             Name = viewmodel.Name,
             ShipType = viewmodel.ShipType,
             MaxCrewSize = viewmodel.MaxCrewSize,
             EnginePower = viewmodel.EnginePower,
-            CreatedAt = viewmodel.CreatedAt
+            // CreatedAt = viewmodel.CreatedAt
         };
         
         var result = await _spaceshipService.Create(dto);
