@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TARge25Shop.Core;
-using TARge25Shop.Core.Domain;
 using TARge25Shop.Models.Spaceship;
 using TARge25Shop.Core.Dto;
 using TARge25Shop.Data;

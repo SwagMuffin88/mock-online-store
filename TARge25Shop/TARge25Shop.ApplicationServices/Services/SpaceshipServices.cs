@@ -6,7 +6,6 @@ using TARge25Shop.Data;
 
 namespace TARge25Shop.ApplicationServices.Services;
 
-
 public class SpaceshipServices : ISpaceshipServiceInterface
 {
     private readonly TARge25ShopContext _dbContext;
