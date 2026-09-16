@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using TARge25Shop.Core;
 using TARge25Shop.Core.Domain;
 using TARge25Shop.Core.Dto;
@@ -57,13 +58,21 @@ public class KindergartenServices : IKindergartenServiceInterface
         return kindergarten;
     }
 
-    public Task<Kindergarten> DetailAsync(Guid id)
+    public async Task<Kindergarten?> DetailAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var kindergarten = await _dbContext.Kindergartens
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        return kindergarten;
     }
 
-    public Task<Kindergarten?> Delete(Guid id)
+    public async Task<Kindergarten?> Delete(Guid id)
     {
-        throw new NotImplementedException();
+        var result = await DetailAsync(id);
+        
+        _dbContext.Kindergartens.Remove(result);
+        await _dbContext.SaveChangesAsync();
+
+        return result;
     }
 }

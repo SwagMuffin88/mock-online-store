@@ -7,6 +7,6 @@ public interface IKindergartenServiceInterface
 {
     Task<Kindergarten> Create(KindergartenDto dto);
     Task<Kindergarten?> Update(KindergartenDto dto);
-    Task<Kindergarten> DetailAsync(Guid id);
+    Task<Kindergarten?> DetailAsync(Guid id);
     Task<Kindergarten?> Delete(Guid id);
 }

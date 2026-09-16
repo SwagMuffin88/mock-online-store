@@ -15,7 +15,7 @@ public class SpaceshipServices : ISpaceshipServiceInterface
         _dbContext = dbContext;
     }
     
-    public async Task<Spaceship?> Create(SpaceshipDto spaceshipDto)
+    public async Task<Spaceship> Create(SpaceshipDto spaceshipDto)
     {
         var spaceship = new Spaceship
         {
