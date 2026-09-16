@@ -153,4 +153,28 @@ public class KindergartenController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Details(Guid id)
+    {
+        var kindergarten = await _kindergartenService.DetailAsync(id);
+
+        if (kindergarten == null)
+        {
+            return NotFound();
+        }
+
+        var viewmodel = new KindergartenDetailsViewmodel
+        {
+            Id = kindergarten.Id,
+            GroupName = kindergarten.GroupName,
+            ChildrenCount = kindergarten.ChildrenCount,
+            KindergartenName = kindergarten.KindergartenName,
+            TeacherName = kindergarten.TeacherName,
+            CreatedAt = kindergarten.CreatedAt,
+            UpdatedAt = kindergarten.UpdatedAt
+        };
+
+        return View(viewmodel);
+    }
 }
