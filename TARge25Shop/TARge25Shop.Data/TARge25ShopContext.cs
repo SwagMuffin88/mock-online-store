@@ -12,8 +12,5 @@ public class TARge25ShopContext : DbContext
     
     public DbSet<Spaceship> Spaceships { get; set; }
     
-    // protected override void OnModelCreating(ModelBuilder modelBuilder)
-    // {
-    //     modelBuilder.Entity<Spaceship>()
-    // }
+    public DbSet<Kindergarten> Kindergartens { get; set; }
 }
