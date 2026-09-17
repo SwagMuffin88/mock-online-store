@@ -45,7 +45,8 @@ public class KindergartenServices : IKindergartenServiceInterface
     {
         var kindergarten = new Kindergarten();
 
-        kindergarten.Id = Guid.NewGuid();
+        kindergarten.Id = dto.Id;
+        kindergarten.GroupName = dto.GroupName;
         kindergarten.KindergartenName = dto.KindergartenName;
         kindergarten.ChildrenCount = dto.ChildrenCount;
         kindergarten.TeacherName = dto.TeacherName;
