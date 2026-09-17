@@ -17,6 +17,7 @@ namespace TARge25Shop
             builder.Services.AddControllersWithViews();
             
             builder.Services.AddScoped<ISpaceshipServiceInterface, SpaceshipServices>();
+            builder.Services.AddScoped<IKindergartenServiceInterface, KindergartenServices>();
             
             builder.Services.AddDbContext<TARge25ShopContext>(options =>
                 options.UseSqlite(
