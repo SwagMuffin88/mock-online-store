@@ -10,17 +10,19 @@ public class FileServices :IFileServices
 {
     private readonly TARge25ShopContext _dbContext;
 
-    private static readonly IHostEnvironment _webHost;
-    private static readonly string ContentRootPath = _webHost.ContentRootPath;
-    private string _path = ContentRootPath + "\\wwroot\\multipleFileUpload\\";
+    private  readonly IHostEnvironment _webHost;
     
-    public FileServices(TARge25ShopContext dbContext)
+    public FileServices(TARge25ShopContext dbContext, IHostEnvironment webHost)
     {
         _dbContext = dbContext;
+        _webHost = webHost;
     }
 
     public void ConvertFilesToApi(SpaceshipDto dto, Spaceship spaceship)
     {
+        string ContentRootPath = _webHost.ContentRootPath;
+        string _path = ContentRootPath + "\\wwroot\\multipleFileUpload\\";
+        
         if (dto.Files != null && dto.Files.Count >= 0)
         {
             if (!Directory.Exists(_path))
