@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+
 namespace TARge25Shop.Core.Dto;
 
 public class SpaceshipDto
@@ -7,6 +9,8 @@ public class SpaceshipDto
     public string ShipType { get; set; } =  string.Empty;
     public int MaxCrewSize { get; set; }
     public int EnginePower { get; set; }
+    
+    public List<IFormFile> Files { get; set; }
     
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
