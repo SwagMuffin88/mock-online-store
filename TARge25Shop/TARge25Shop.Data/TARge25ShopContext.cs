@@ -16,4 +16,6 @@ public class TARge25ShopContext : DbContext
     // {
     //     modelBuilder.Entity<Spaceship>()
     // }
+    
+    public DbSet<FileToApi>  FilesToApis { get; set; }
 }

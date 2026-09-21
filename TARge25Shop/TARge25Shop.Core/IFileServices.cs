@@ -5,6 +5,6 @@ namespace TARge25Shop.Core;
 
 public interface IFileServices
 {
-    public void FilesToApi(SpaceshipDto dto, Spaceship spaceship);
+    public void ConvertFilesToApi(SpaceshipDto dto, Spaceship spaceship);
     
 }

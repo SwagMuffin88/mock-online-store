@@ -14,13 +14,12 @@ public class FileServices :IFileServices
     private static readonly string ContentRootPath = _webHost.ContentRootPath;
     private string _path = ContentRootPath + "\\wwroot\\multipleFileUpload\\";
     
-
     public FileServices(TARge25ShopContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public void FilesToApi(SpaceshipDto dto, Spaceship spaceship)
+    public void ConvertFilesToApi(SpaceshipDto dto, Spaceship spaceship)
     {
         if (dto.Files != null && dto.Files.Count >= 0)
         {
@@ -38,6 +37,12 @@ public class FileServices :IFileServices
                 using (var fileStream = new FileStream(fullPath, FileMode.Create))
                 {
                     file.CopyTo(fileStream);
+                    FileToApi path = new FileToApi
+                    {
+                        Id = Guid.NewGuid(),
+                        ExistingFilePath = uniqueFileName,
+                        SpaceshipId = spaceship.Id
+                    };
                 }
             }
         }
