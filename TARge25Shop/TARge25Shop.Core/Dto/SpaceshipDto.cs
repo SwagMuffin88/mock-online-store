@@ -10,8 +10,7 @@ public class SpaceshipDto
     public int MaxCrewSize { get; set; }
     public int EnginePower { get; set; }
     
-    public List<IFormFile> Files { get; set; }
-    
+    public List<IFormFile>? Files { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }
