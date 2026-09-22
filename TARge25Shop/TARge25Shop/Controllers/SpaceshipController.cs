@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Components.Web.HtmlRendering;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TARge25Shop.Core;
@@ -5,6 +6,7 @@ using TARge25Shop.Core.Domain;
 using TARge25Shop.Models.Spaceship;
 using TARge25Shop.Core.Dto;
 using TARge25Shop.Data;
+using TARge25Shop.Models;
 
 namespace TARge25Shop.Controllers;
 
@@ -44,7 +46,7 @@ public class SpaceshipController : Controller
     }
     
     [HttpPost]
-    public async Task<IActionResult> Create(SpaceshipCreateViewModel viewmodel)
+    public async Task<IActionResult> Create(SpaceshipCreateUpdateViewmodel viewmodel)
     {
         // if (!ModelState.IsValid)
         // {
@@ -83,7 +85,7 @@ public class SpaceshipController : Controller
             return NotFound();
         } 
         
-        var viewmodel = new SpaceshipUpdateViewModel
+        var viewmodel = new SpaceshipCreateUpdateViewmodel
         {
             Id = spaceship.Id,
             Name = spaceship.Name,
@@ -98,7 +100,7 @@ public class SpaceshipController : Controller
     }
         
     [HttpPost]
-    public async Task<IActionResult> Update(SpaceshipUpdateViewModel viewmodel)
+    public async Task<IActionResult> Update(SpaceshipCreateUpdateViewmodel viewmodel)
     {
         if (!ModelState.IsValid)
         {
@@ -171,6 +173,14 @@ public class SpaceshipController : Controller
         {
             return NotFound();
         }
+
+        var images = await _dbContext.FilesToApis
+            .Where(x => x.SpaceshipId == id)
+            .Select(y => new ImageViewModel
+            {
+                FilePath = y.ExistingFilePath,
+                ImageId = y.Id
+            }).ToArrayAsync<ImageViewModel>();
         
         var viewmodel = new SpaceshipDetailsViewModel
         {
@@ -182,6 +192,8 @@ public class SpaceshipController : Controller
             CreatedAt = spaceship.CreatedAt,
             UpdatedAt = spaceship.UpdatedAt
         };
+        
+        viewmodel.Images.AddRange(images);
 
         return View(viewmodel);
     }
