@@ -42,7 +42,7 @@ public class SpaceshipController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        return View();
+        return View("CreateUpdate");
     }
     
     [HttpPost]
@@ -96,7 +96,7 @@ public class SpaceshipController : Controller
             UpdatedAt = spaceship.UpdatedAt
         };
         
-        return View(viewmodel);
+        return View("CreateUpdate", viewmodel);
     }
         
     [HttpPost]
@@ -104,7 +104,7 @@ public class SpaceshipController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return View(viewmodel);
+            return View("CreateUpdate", viewmodel);
         }
 
         var dto = new SpaceshipDto

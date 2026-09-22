@@ -2,6 +2,7 @@ using TARge25Shop.ApplicationServices.Services;
 using TARge25Shop.Core;
 using TARge25Shop.Data;
 using Microsoft.EntityFrameworkCore;
+using TARge25Shop.ApplicationServices;
 
 namespace TARge25Shop
 {
@@ -17,6 +18,7 @@ namespace TARge25Shop
             builder.Services.AddControllersWithViews();
             
             builder.Services.AddScoped<ISpaceshipServiceInterface, SpaceshipServices>();
+            builder.Services.AddScoped<IFileServices, FileServices>();
             
             builder.Services.AddDbContext<TARge25ShopContext>(options =>
                 options.UseSqlite(
