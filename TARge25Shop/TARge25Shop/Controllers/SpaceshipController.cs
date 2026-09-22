@@ -42,7 +42,8 @@ public class SpaceshipController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        return View("CreateUpdate");
+        SpaceshipCreateUpdateViewmodel result = new();
+        return View("CreateUpdate", result);
     }
     
     [HttpPost]
