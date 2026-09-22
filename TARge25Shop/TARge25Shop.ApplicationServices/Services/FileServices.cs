@@ -45,6 +45,8 @@ public class FileServices :IFileServices
                         ExistingFilePath = uniqueFileName,
                         SpaceshipId = spaceship.Id
                     };
+
+                    _dbContext.FilesToApis.AddAsync(path);
                 }
             }
         }

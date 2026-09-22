@@ -10,10 +10,12 @@ namespace TARge25Shop.ApplicationServices.Services;
 public class SpaceshipServices : ISpaceshipServiceInterface
 {
     private readonly TARge25ShopContext _dbContext;
+    private readonly IFileServices  _fileServices;
 
-    public SpaceshipServices(TARge25ShopContext dbContext)
+    public SpaceshipServices(TARge25ShopContext dbContext, IFileServices fileServices)
     {
         _dbContext = dbContext;
+        _fileServices =  fileServices;
     }
     
     public async Task<Spaceship?> Create(SpaceshipDto spaceshipDto)
@@ -34,6 +36,9 @@ public class SpaceshipServices : ISpaceshipServiceInterface
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
         };
+        
+        _fileServices.ConvertFilesToApi(spaceshipDto, spaceship);
+        
         try
         {
             _dbContext.Add(spaceship);
