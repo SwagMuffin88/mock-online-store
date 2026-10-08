@@ -42,7 +42,7 @@ public class KindergartenServices : IKindergartenServiceInterface
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error saving new spaceship: {e.Message}");
+            Console.WriteLine($"Error saving new kindergarten: {e.Message}");
             return null;
         }
     }
@@ -77,6 +77,11 @@ public class KindergartenServices : IKindergartenServiceInterface
     public async Task<Kindergarten?> Delete(Guid id)
     {
         var result = await DetailAsync(id);
+
+        if (result == null)
+        {
+            return null;
+        }
         
         var images = await _dbContext.FilesToApis
             .Where(x => x.ObjectId == id)
@@ -89,6 +94,7 @@ public class KindergartenServices : IKindergartenServiceInterface
         
         try
         {
+            await _fileServices.RemoveImagesFromApi(images);
             _dbContext.Kindergartens.Remove(result);
             await _dbContext.SaveChangesAsync();
         }
