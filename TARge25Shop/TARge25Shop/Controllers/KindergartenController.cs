@@ -103,7 +103,7 @@ public class KindergartenController : Controller
     {
         if (!ModelState.IsValid)
         {
-            System.Diagnostics.Debug.Print("Model state is invalid");
+            System.Diagnostics.Debug.Print("Kindergarten model state is invalid");
             return View("Update", viewmodel);
         }
 
@@ -115,7 +115,9 @@ public class KindergartenController : Controller
             KindergartenName = viewmodel.KindergartenName,
             TeacherName = viewmodel.TeacherName,
             CreatedAt = viewmodel.CreatedAt,
-            UpdatedAt = viewmodel.UpdatedAt
+            UpdatedAt = viewmodel.UpdatedAt,
+            Files = viewmodel.Files,
+            FileToApiDtos = MapToImageDtos(viewmodel)
         };
 
         var result = await _kindergartenService.Update(dto);
@@ -138,6 +140,8 @@ public class KindergartenController : Controller
             return NotFound();
         }
 
+        var images = await GetImagesByKindergartenId(id);
+
         var viewmodel = new KindergartenDeleteViewmodel
         {
             Id = kindergarten.Id,
@@ -148,6 +152,8 @@ public class KindergartenController : Controller
             CreatedAt = kindergarten.CreatedAt,
             UpdatedAt = kindergarten.UpdatedAt
         };
+        
+        viewmodel.Images.AddRange(images);
 
         return View(viewmodel);
     }
@@ -175,6 +181,8 @@ public class KindergartenController : Controller
             return NotFound();
         }
 
+        var images = await GetImagesByKindergartenId(id);
+
         var viewmodel = new KindergartenDetailsViewmodel
         {
             Id = kindergarten.Id,
@@ -185,8 +193,28 @@ public class KindergartenController : Controller
             CreatedAt = kindergarten.CreatedAt,
             UpdatedAt = kindergarten.UpdatedAt
         };
+        
+        viewmodel.Images.AddRange(images);
 
         return View(viewmodel);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> RemoveImage(Models.Spaceship.ImageViewModel vm)
+    {
+        var dto = new FileToApiDto()
+        {
+            Id = vm.ImageId
+        };
+
+        var image = await _fileServices.RemoveImageFromApi(dto);
+
+        if (image == null)
+        {
+            return RedirectToAction(nameof(Index));
+        }
+
+        return RedirectToAction(nameof(Index));
     }
 
     private async Task<ImageViewModel[]> GetImagesByKindergartenId(Guid id)
