@@ -22,68 +22,11 @@ public class FileServices :IFileServices
     public void UploadFilesToApi(SpaceshipDto dto, Spaceship spaceship)
     {
         UploadFilesToApiHelper(dto.Files, spaceship.Id);
-        // if (dto.Files != null && dto.Files.Count >= 0)
-        // {
-        //     string uploadsFolder = Path.Combine(_webHost.ContentRootPath, "wwwroot", "multipleFileUpload");
-        //     
-        //     if (!Directory.Exists(uploadsFolder))
-        //     {
-        //         Directory.CreateDirectory(uploadsFolder);
-        //     }
-        //
-        //     foreach (var file in dto.Files)
-        //     {
-        //         string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-        //         string fullPath = Path.Combine(uploadsFolder, uniqueFileName);
-        //
-        //         using (var fileStream = new FileStream(fullPath, FileMode.Create))
-        //         {
-        //             file.CopyTo(fileStream);
-        //             
-        //             FileToApi path = new FileToApi
-        //             {
-        //                 Id = Guid.NewGuid(),
-        //                 ExistingFilePath = uniqueFileName,
-        //                 ObjectId = spaceship.Id
-        //             };
-        //
-        //             _dbContext.FilesToApis.Add(path);
-        //         }
-        //     }
-        // }
     }
 
     public void UploadFilesToApi(KindergartenDto dto, Kindergarten kindergarten)
     {
-        // if (dto.Files != null && dto.Files.Count >= 0)
-        // {
-        //     string uploadsFolder = Path.Combine(_webHost.ContentRootPath, "wwwroot", "multipleFileUpload");
-        //     
-        //     if (!Directory.Exists(uploadsFolder))
-        //     {
-        //         Directory.CreateDirectory(uploadsFolder);
-        //     }
-        //
-        //     foreach (var file in dto.Files)
-        //     {
-        //         string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-        //         string fullPath = Path.Combine(uploadsFolder, uniqueFileName);
-        //
-        //         using (var fileStream = new FileStream(fullPath, FileMode.Create))
-        //         {
-        //             file.CopyTo(fileStream);
-        //             
-        //             FileToApi path = new FileToApi
-        //             {
-        //                 Id = Guid.NewGuid(),
-        //                 ExistingFilePath = uniqueFileName,
-        //                 ObjectId = kindergarten.Id
-        //             };
-        //
-        //             _dbContext.FilesToApis.Add(path);
-        //         }
-        //     }
-        // }
+        UploadFilesToApiHelper(dto.Files, kindergarten.Id);
     }
 
     private void UploadFilesToApiHelper(List<IFormFile> files, Guid objectId)
