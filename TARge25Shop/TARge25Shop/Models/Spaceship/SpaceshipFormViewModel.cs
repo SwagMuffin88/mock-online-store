@@ -6,5 +6,5 @@ public abstract class SpaceshipFormViewModel
     public string ShipType { get; set; } = String.Empty;
     public int MaxCrewSize { get; set; }
     public int EnginePower { get; set; }
-    public List<IFormFile> Files { get; set; }
+    public List<IFormFile>? Files { get; set; }
 }

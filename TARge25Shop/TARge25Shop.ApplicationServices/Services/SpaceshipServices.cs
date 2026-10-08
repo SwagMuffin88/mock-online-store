@@ -95,6 +95,7 @@ public class SpaceshipServices : ISpaceshipServiceInterface
 
         try
         {
+            await _fileServices.RemoveImagesFromApi(images);
             _dbContext.Spaceships.Remove(result);
             await _dbContext.SaveChangesAsync();
         }
