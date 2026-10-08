@@ -11,10 +11,14 @@ public class KindergartenController : Controller
 {
     private readonly IKindergartenServiceInterface _kindergartenService;
     private readonly TARge25ShopContext _dbContext;
-    public KindergartenController(IKindergartenServiceInterface kindergartenService, TARge25ShopContext dbContext)
+    private readonly IFileServices _fileServices;
+    
+    public KindergartenController(
+        IKindergartenServiceInterface kindergartenService, TARge25ShopContext dbContext, IFileServices fileServices)
     {
         _kindergartenService = kindergartenService;
         _dbContext = dbContext;
+        _fileServices = fileServices;
     }
 
     [HttpGet]
@@ -76,6 +80,8 @@ public class KindergartenController : Controller
             return NotFound();
         }
 
+        var images = await GetImagesByKindergartenId(id);
+        
         var viewmodel = new KindergartenUpdateViewmodel
         {
             Id = kindergarten.Id,
@@ -86,6 +92,8 @@ public class KindergartenController : Controller
             CreatedAt = kindergarten.CreatedAt,
             UpdatedAt = kindergarten.UpdatedAt
         };
+        
+        viewmodel.Images.AddRange(images);
 
         return View("Update", viewmodel);
     }
@@ -179,5 +187,29 @@ public class KindergartenController : Controller
         };
 
         return View(viewmodel);
+    }
+
+    private async Task<ImageViewModel[]> GetImagesByKindergartenId(Guid id)
+    {
+        var images = await _dbContext.FilesToApis
+            .Where(x => x.ObjectId == id)
+            .Select(y => new ImageViewModel
+            {
+                FilePath = y.ExistingFilePath,
+                ImageId = y.Id
+            }).ToArrayAsync();
+        
+        return images;
+    }
+    
+    private FileToApiDto[] MapToImageDtos(KindergartenUpdateViewmodel viewmodel)
+    {
+        return viewmodel.Images
+            .Select(x => new FileToApiDto
+            {
+                Id = x.ImageId,
+                ExistingFilePath = x.FilePath,
+                ObjectId = x.KindergartenId
+            }).ToArray();
     }
 }
