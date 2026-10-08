@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using TARge25Shop.Core;
 using TARge25Shop.Core.Domain;
@@ -9,10 +10,12 @@ namespace TARge25Shop.ApplicationServices.Services;
 public class KindergartenServices : IKindergartenServiceInterface
 {
     private readonly TARge25ShopContext _dbContext;
+    private readonly IFileServices  _fileServices;
 
-    public KindergartenServices(TARge25ShopContext dbContext)
+    public KindergartenServices(TARge25ShopContext dbContext, IFileServices fileServices)
     {
         _dbContext = dbContext;
+        _fileServices = fileServices;
     }
     
     public async Task<Kindergarten> Create(KindergartenDto dto)
@@ -32,6 +35,9 @@ public class KindergartenServices : IKindergartenServiceInterface
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now,
         };
+
+        _fileServices.UploadFilesToApi(dto, kindergarten);
+        
         try
         {
             _dbContext.Add(kindergarten);
@@ -61,6 +67,7 @@ public class KindergartenServices : IKindergartenServiceInterface
         kindergarten.TeacherName = dto.TeacherName;
         kindergarten.CreatedAt = dto.CreatedAt;
         kindergarten.UpdatedAt = DateTime.Now;
+        _fileServices.UploadFilesToApi(dto, kindergarten);
 
         _dbContext.Kindergartens.Update(kindergarten);
         await _dbContext.SaveChangesAsync();
@@ -88,8 +95,24 @@ public class KindergartenServices : IKindergartenServiceInterface
             return null;
         }
         
-        _dbContext.Kindergartens.Remove(result);
-        await _dbContext.SaveChangesAsync();
+        var images = await _dbContext.FilesToApis
+            .Where(x => x.ObjectId == id)
+            .Select(y => new FileToApiDto
+            {
+                Id = y.Id,
+                ObjectId = y.ObjectId,
+                ExistingFilePath = y.ExistingFilePath
+            }).ToArrayAsync();
+        
+        try
+        {
+            _dbContext.Kindergartens.Remove(result);
+            await _dbContext.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine("Exception:  " + e.Message);
+        }
 
         return result;
     }

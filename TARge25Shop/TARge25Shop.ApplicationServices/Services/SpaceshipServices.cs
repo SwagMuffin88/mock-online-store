@@ -89,7 +89,7 @@ public class SpaceshipServices : ISpaceshipServiceInterface
             .Select(y => new FileToApiDto
             {
                 Id = y.Id,
-                SpaceshipId = y.ObjectId,
+                ObjectId = y.ObjectId,
                 ExistingFilePath = y.ExistingFilePath
             }).ToArrayAsync();
 
