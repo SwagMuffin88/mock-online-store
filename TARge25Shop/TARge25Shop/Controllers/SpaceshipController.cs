@@ -42,12 +42,12 @@ public class SpaceshipController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        SpaceshipCreateUpdateViewmodel result = new();
-        return View("CreateUpdate", result);
+        SpaceshipUpdateViewmodel result = new();
+        return View("Create", result);
     }
     
     [HttpPost]
-    public async Task<IActionResult> Create(SpaceshipCreateUpdateViewmodel viewmodel)
+    public async Task<IActionResult> Create(SpaceshipCreateViewModel viewmodel)
     {
         var dto = new SpaceshipDto
         {
@@ -56,13 +56,13 @@ public class SpaceshipController : Controller
             MaxCrewSize = viewmodel.MaxCrewSize,
             EnginePower = viewmodel.EnginePower,
             Files = viewmodel.Files,
-            FileToApiDtos =viewmodel.Images
-                .Select(x => new FileToApiDto
-                {
-                    Id = x.ImageId,
-                    ExistingFilePath = x.FilePath,
-                    SpaceshipId = x.SpaceshipId
-                })
+            // FileToApiDtos = viewmodel.Images
+            //     .Select(x => new FileToApiDto
+            //     {
+            //         Id = x.ImageId,
+            //         ExistingFilePath = x.FilePath,
+            //         SpaceshipId = x.SpaceshipId
+            //     })
         };
         
         var result = await _spaceshipService.Create(dto);
@@ -89,7 +89,7 @@ public class SpaceshipController : Controller
 
         var images = await GetImagesBySpaceshipId(id);
         
-        var viewmodel = new SpaceshipCreateUpdateViewmodel
+        var viewmodel = new SpaceshipUpdateViewmodel
         {
             Id = spaceship.Id,
             Name = spaceship.Name,
@@ -102,15 +102,15 @@ public class SpaceshipController : Controller
         
         viewmodel.Images.AddRange(images);
         
-        return View("CreateUpdate", viewmodel);
+        return View("Update", viewmodel);
     }
         
     [HttpPost]
-    public async Task<IActionResult> Update(SpaceshipCreateUpdateViewmodel viewmodel)
+    public async Task<IActionResult> Update(SpaceshipUpdateViewmodel viewmodel)
     {
         if (!ModelState.IsValid)
         {
-            return View("CreateUpdate", viewmodel);
+            return View("Update", viewmodel);
         }
 
         var dto = new SpaceshipDto
@@ -226,7 +226,7 @@ public class SpaceshipController : Controller
     private async Task<ImageViewModel[]> GetImagesBySpaceshipId(Guid id)
     {
         var images = await _dbContext.FilesToApis
-            .Where(x => x.SpaceshipId == id)
+            .Where(x => x.ObjectId == id)
             .Select(y => new ImageViewModel
             {
                 FilePath = y.ExistingFilePath,
@@ -236,7 +236,7 @@ public class SpaceshipController : Controller
         return images;
     }
 
-    private FileToApiDto[] MapToImageDtos(SpaceshipCreateUpdateViewmodel viewmodel)
+    private FileToApiDto[] MapToImageDtos(SpaceshipUpdateViewmodel viewmodel)
     {
         return viewmodel.Images
             .Select(x => new FileToApiDto

@@ -12,6 +12,7 @@ public class TARge25ShopContext : DbContext
     
     public DbSet<Spaceship> Spaceships { get; set; }
     
+    public DbSet<Kindergarten> Kindergartens { get; set; }
     public DbSet<FileToApi>  FilesToApis { get; set; }
     
     public DbSet<RealEstate> RealEstates { get; set; }

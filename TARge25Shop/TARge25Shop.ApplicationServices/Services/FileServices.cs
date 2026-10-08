@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using TARge25Shop.Core;
 using TARge25Shop.Core.Domain;
@@ -18,35 +19,46 @@ public class FileServices :IFileServices
         _webHost = webHost;
     }
 
-    public void ConvertFilesToApi(SpaceshipDto dto, Spaceship spaceship)
+    public void UploadFilesToApi(SpaceshipDto dto, Spaceship spaceship)
     {
-        if (dto.Files != null && dto.Files.Count >= 0)
+        UploadFilesToApiHelper(dto.Files, spaceship.Id);
+    }
+
+    public void UploadFilesToApi(KindergartenDto dto, Kindergarten kindergarten)
+    {
+        UploadFilesToApiHelper(dto.Files, kindergarten.Id);
+    }
+
+    private void UploadFilesToApiHelper(List<IFormFile> files, Guid objectId)
+    {
+        if (files == null || files.Count == 0)
         {
-            string uploadsFolder = Path.Combine(_webHost.ContentRootPath, "wwwroot", "multipleFileUpload");
-            
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
+            return;
+        }
+        string uploadsFolder = Path.Combine(_webHost.ContentRootPath, "wwwroot", "multipleFileUpload");
 
-            foreach (var file in dto.Files)
-            {
-                string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-                string fullPath = Path.Combine(uploadsFolder, uniqueFileName);
+        if (!Directory.Exists(uploadsFolder))
+        {
+            Directory.CreateDirectory(uploadsFolder);
+        }
 
-                using (var fileStream = new FileStream(fullPath, FileMode.Create))
+        foreach (var file in files)
+        {
+            string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+            string fullPath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            using (var fileStream = new FileStream(fullPath, FileMode.Create))
+            {
+                file.CopyTo(fileStream);
+
+                FileToApi path = new FileToApi
                 {
-                    file.CopyTo(fileStream);
-                    
-                    FileToApi path = new FileToApi
-                    {
-                        Id = Guid.NewGuid(),
-                        ExistingFilePath = uniqueFileName,
-                        SpaceshipId = spaceship.Id
-                    };
+                    Id = Guid.NewGuid(),
+                    ExistingFilePath = uniqueFileName,
+                    ObjectId = objectId
+                };
 
-                    _dbContext.FilesToApis.Add(path);
-                }
+                _dbContext.FilesToApis.Add(path);
             }
         }
     }

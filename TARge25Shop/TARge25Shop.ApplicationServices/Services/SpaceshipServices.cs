@@ -7,7 +7,6 @@ using TARge25Shop.Data;
 
 namespace TARge25Shop.ApplicationServices.Services;
 
-
 public class SpaceshipServices : ISpaceshipServiceInterface
 {
     private readonly TARge25ShopContext _dbContext;
@@ -19,7 +18,7 @@ public class SpaceshipServices : ISpaceshipServiceInterface
         _fileServices =  fileServices;
     }
     
-    public async Task<Spaceship?> Create(SpaceshipDto spaceshipDto)
+    public async Task<Spaceship> Create(SpaceshipDto spaceshipDto)
     {
         var spaceship = new Spaceship
         {
@@ -38,7 +37,7 @@ public class SpaceshipServices : ISpaceshipServiceInterface
             UpdatedAt = DateTime.Now
         };
         
-        _fileServices.ConvertFilesToApi(spaceshipDto, spaceship);
+        _fileServices.UploadFilesToApi(spaceshipDto, spaceship);
         
         try
         {
@@ -65,7 +64,7 @@ public class SpaceshipServices : ISpaceshipServiceInterface
         spaceship.EnginePower = dto.EnginePower;
         spaceship.CreatedAt = dto.CreatedAt;
         spaceship.UpdatedAt = DateTime.Now;
-        _fileServices.ConvertFilesToApi(dto, spaceship);
+        _fileServices.UploadFilesToApi(dto, spaceship);
         
         _dbContext.Spaceships.Update(spaceship);
         await _dbContext.SaveChangesAsync();
@@ -86,11 +85,11 @@ public class SpaceshipServices : ISpaceshipServiceInterface
         var result = await DetailAsync(id);
 
         var images = await _dbContext.FilesToApis
-            .Where(x => x.SpaceshipId == id)
+            .Where(x => x.ObjectId == id)
             .Select(y => new FileToApiDto
             {
                 Id = y.Id,
-                SpaceshipId = y.SpaceshipId,
+                SpaceshipId = y.ObjectId,
                 ExistingFilePath = y.ExistingFilePath
             }).ToArrayAsync();
 

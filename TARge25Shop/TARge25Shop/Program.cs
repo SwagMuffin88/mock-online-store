@@ -18,6 +18,7 @@ namespace TARge25Shop
             builder.Services.AddControllersWithViews();
             
             builder.Services.AddScoped<ISpaceshipServiceInterface, SpaceshipServices>();
+            builder.Services.AddScoped<IKindergartenServiceInterface, KindergartenServices>();
             builder.Services.AddScoped<IFileServices, FileServices>();
             builder.Services.AddScoped<IRealEstateServices, RealEstateServices>();
             

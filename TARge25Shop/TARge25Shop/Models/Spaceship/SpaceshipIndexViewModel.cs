@@ -1,10 +1,13 @@
+using System.ComponentModel.DataAnnotations;
 using TARge25Shop.Core.Dto;
 
 namespace TARge25Shop.Models.Spaceship;
 
 public class SpaceshipIndexViewModel
 {
-    public Guid? Id { get; set; }
+    [Required]
+    public Guid Id { get; set; }
+    [Required]
     public string Name { get; set; } = string.Empty;
     public string ShipType { get; set; } = string.Empty;
     public int MaxCrewSize { get; set; }

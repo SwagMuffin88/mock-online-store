@@ -1,0 +1,49 @@
+@using TARge25Shop.Core.Domain
+@model IEnumerable<TARge25Shop.Models.Kindergarten.KindergartenIndexViewModel>
+
+<div>
+    <h1>Kindergartens Index</h1>
+    <a asp-action="Create"
+       asp-controller="Kindergarten"
+       class="btn btn-primary">
+        Create
+    </a>
+</div>
+
+<div>
+    <h2>All kindergartens</h2>
+    <form method="get">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Nr</th>
+                <th scope="col">Group name</th>
+                <th scope="col">Number of children</th>
+                <th scope="col">Kindergarten name</th>
+                <th scope="col">Teacher name</th>
+                <th scope="col">Foundation date</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            @{ int i = 1; }
+            @foreach (var kindergarten in Model)
+            {
+                <tr>
+                    <td>@(i++)</td>
+                    <td>@kindergarten.GroupName</td>
+                    <td>@kindergarten.ChildrenCount</td>
+                    <td>@kindergarten.KindergartenName</td>
+                    <td>@kindergarten.TeacherName</td>
+                    <td>@kindergarten.CreatedAt</td>
+                    <td>
+                        <a asp-action="details" asp-controller="Kindergarten" asp-route-id="@kindergarten.Id" class="btn btn-primary">Details</a>
+                        <a asp-action="update" asp-controller="Kindergarten" asp-route-id="@kindergarten.Id" class="btn btn-primary">Update</a>
+                        <a asp-action="delete" asp-controller="Kindergarten" asp-route-id="@kindergarten.Id" class="btn btn-outline-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </form>
+</div>

@@ -2,17 +2,15 @@ using Microsoft.AspNetCore.Http;
 
 namespace TARge25Shop.Core.Dto;
 
-public class SpaceshipDto
+public class KindergartenDto
 {
     public Guid Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string ShipType { get; set; } =  string.Empty;
-    public int MaxCrewSize { get; set; }
-    public int EnginePower { get; set; }
-    
+    public string GroupName { get; set; } = string.Empty;
+    public int ChildrenCount { get; set; }
+    public string KindergartenName { get; set; } = string.Empty;
+    public string TeacherName { get; set; } = string.Empty;
     public List<IFormFile>? Files { get; set; }
     public IEnumerable<FileToApiDto> FileToApiDtos { get; set; } = new List<FileToApiDto>();
-    
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }
