@@ -236,7 +236,7 @@ public class SpaceshipController : Controller
             {
                 Id = x.ImageId,
                 ExistingFilePath = x.FilePath,
-                SpaceshipId = x.SpaceshipId
+                ObjectId = x.SpaceshipId
             }).ToArray();
     }
 }
