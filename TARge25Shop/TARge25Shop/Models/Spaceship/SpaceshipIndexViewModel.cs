@@ -3,7 +3,7 @@ using TARge25Shop.Core.Dto;
 
 namespace TARge25Shop.Models.Spaceship;
 
-public class SpaceshipIndexViewModel
+public class SpaceshipIndexViewModel 
 {
     [Required]
     public Guid Id { get; set; }
@@ -15,8 +15,6 @@ public class SpaceshipIndexViewModel
     
     public List<IFormFile> Files { get; set; }
     public List<ImageViewModel> Images { get; set; } = new List<ImageViewModel>();
-    // public IEnumerable<FileToApiDto> FileToApiDtos { get; set; }
-    //     = new List<FileToApiDto>();
 
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }

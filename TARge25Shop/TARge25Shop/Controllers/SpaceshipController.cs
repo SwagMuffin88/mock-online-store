@@ -42,12 +42,12 @@ public class SpaceshipController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        SpaceshipUpdateViewmodel result = new();
+        SpaceshipCreateViewViewModel result = new();
         return View("Create", result);
     }
     
     [HttpPost]
-    public async Task<IActionResult> Create(SpaceshipCreateViewModel viewmodel)
+    public async Task<IActionResult> Create(SpaceshipCreateViewViewModel viewmodel)
     {
         var dto = new SpaceshipDto
         {
@@ -55,14 +55,7 @@ public class SpaceshipController : Controller
             ShipType = viewmodel.ShipType,
             MaxCrewSize = viewmodel.MaxCrewSize,
             EnginePower = viewmodel.EnginePower,
-            Files = viewmodel.Files,
-            // FileToApiDtos = viewmodel.Images
-            //     .Select(x => new FileToApiDto
-            //     {
-            //         Id = x.ImageId,
-            //         ExistingFilePath = x.FilePath,
-            //         SpaceshipId = x.SpaceshipId
-            //     })
+            Files = viewmodel.Files
         };
         
         var result = await _spaceshipService.Create(dto);
