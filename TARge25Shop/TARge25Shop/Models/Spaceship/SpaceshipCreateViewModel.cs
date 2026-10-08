@@ -2,4 +2,4 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TARge25Shop.Models.Spaceship;
 
-public class SpaceshipCreateViewViewModel : SpaceshipFormViewModel { }
+public class SpaceshipCreateViewModel : SpaceshipFormViewModel { }

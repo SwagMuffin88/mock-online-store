@@ -38,7 +38,8 @@ public class KindergartenController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        return View();
+        KindergartenCreateViewModel result = new KindergartenCreateViewModel();
+        return View("Create", result);
     }
 
     [HttpPost]
@@ -50,6 +51,7 @@ public class KindergartenController : Controller
             ChildrenCount = viewmodel.ChildrenCount,
             KindergartenName = viewmodel.KindergartenName,
             TeacherName = viewmodel.TeacherName,
+            Files = viewmodel.Files
         };
 
         var result = await _kindergartenService.Create(dto);
@@ -85,7 +87,7 @@ public class KindergartenController : Controller
             UpdatedAt = kindergarten.UpdatedAt
         };
 
-        return View(viewmodel);
+        return View("Update", viewmodel);
     }
     
     [HttpPost]
@@ -93,7 +95,8 @@ public class KindergartenController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return View(viewmodel);
+            System.Diagnostics.Debug.Print("Model state is invalid");
+            return View("Update", viewmodel);
         }
 
         var dto = new KindergartenDto
