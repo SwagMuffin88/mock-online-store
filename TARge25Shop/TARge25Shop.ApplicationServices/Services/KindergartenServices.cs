@@ -77,10 +77,6 @@ public class KindergartenServices : IKindergartenServiceInterface
 
     public async Task<Kindergarten?> DetailAsync(Guid id)
     {
-        if (id == Guid.Empty)
-        {
-            return null;
-        }
         var kindergarten = await _dbContext.Kindergartens
             .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -90,6 +86,7 @@ public class KindergartenServices : IKindergartenServiceInterface
     public async Task<Kindergarten?> Delete(Guid id)
     {
         var result = await DetailAsync(id);
+
         if (result == null)
         {
             return null;
@@ -106,6 +103,7 @@ public class KindergartenServices : IKindergartenServiceInterface
         
         try
         {
+            await _fileServices.RemoveImagesFromApi(images);
             _dbContext.Kindergartens.Remove(result);
             await _dbContext.SaveChangesAsync();
         }

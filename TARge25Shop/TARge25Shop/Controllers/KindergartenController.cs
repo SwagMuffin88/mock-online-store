@@ -200,7 +200,7 @@ public class KindergartenController : Controller
     }
     
     [HttpPost]
-    public async Task<IActionResult> RemoveImage(Models.Spaceship.ImageViewModel vm)
+    public async Task<IActionResult> RemoveImage(ImageViewModel vm)
     {
         var dto = new FileToApiDto()
         {
