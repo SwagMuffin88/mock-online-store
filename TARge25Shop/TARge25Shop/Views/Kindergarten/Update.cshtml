@@ -10,7 +10,25 @@
         <input asp-for="UpdatedAt" type="hidden"/>
 
         <partial name="_KindergartenFormFields" model="Model" />
+        
+        <div class="form-group row my-4">
+            @foreach (var images in Model.Images)
+            {
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="card h-100 p-2">
+                        <partial name="_Images" model="images"/>
+                    
+                        <div class="mt-auto pt-2">
+                            <input asp-action="removeImage" asp-controller="Kindergarten" asp-route-imageId="@images.ImageId"
+                                   asp-route-kindergartenId="@Model.Id"
+                                   type="submit" class="btn btn-danger col-sm-4" value="Remove Image"/>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
 
+        <br />
         <input asp-action="Update" asp-controller="kindergarten" type="submit" class="btn btn-primary" value="Update"/>
         <a asp-action="Index" asp-controller="kindergarten" class="btn btn-secondary">Back to List</a>
 

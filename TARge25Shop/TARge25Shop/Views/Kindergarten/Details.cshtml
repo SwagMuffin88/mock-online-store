@@ -55,11 +55,17 @@
             </div>
         </dl>
         
-        @foreach (var images in Model.Images)
-        {
-            <partial name="_Images" model="images" />
-        }
-
+        <div class="form-group row my-4">
+            @foreach (var images in Model.Images)
+            {
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="card h-100 p-2">
+                        <partial name="_Images" model="images" />
+                    </div>
+                </div>
+            }
+        </div>
+        
         <a asp-action="Index" asp-controller="Kindergarten" class="btn btn-success">Back</a>
     </div>
 </div>
