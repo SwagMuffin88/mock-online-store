@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="SpaceshipBackendTest/SpaceshipBackendTest.csproj" />
   <Project Path="TARge25Shop.ApplicationServices\TARge25Shop.ApplicationServices.csproj" />
   <Project Path="TARge25Shop.Core\TARge25Shop.Core.csproj" />
   <Project Path="TARge25Shop.Data\TARge25Shop.Data.csproj" />
