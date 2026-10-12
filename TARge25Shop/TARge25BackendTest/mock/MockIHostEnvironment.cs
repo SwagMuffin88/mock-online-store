@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TARge25Shop.SpaceshipTest.Mock
+namespace TARge25BackendTest.mock
 {
     public class MockIHostEnvironment : IHostEnvironment
     {

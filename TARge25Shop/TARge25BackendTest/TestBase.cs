@@ -8,7 +8,8 @@ using System.Text;
 using TARge25Shop.ApplicationServices.Services;
 using TARge25Shop.Core;
 using TARge25Shop.Data;
-using TARge25Shop.SpaceshipTest.Mock;
+using TARge25BackendTest.mock;
+ using TARge25BackendTest.macros;
 
 namespace TARge25BackendTest;
 
@@ -23,7 +24,7 @@ public abstract class TestBase : IDisposable
         ServiceProvider = services.BuildServiceProvider();
     }
 
-    protected void SetUpServices(IServiceCollection services)
+     private void SetUpServices(ServiceCollection services)
     {
         services.AddScoped<IFileServices, FileServices>();
         services.AddScoped<IKindergartenServiceInterface, KindergartenServices>();
@@ -32,11 +33,30 @@ public abstract class TestBase : IDisposable
         );
         
         services.AddScoped<IHostEnvironment, MockIHostEnvironment>();
+        RegisterMacros(services);
+    }
+    
+    protected T Svc<T>()
+    {
+        return ServiceProvider.GetRequiredService<T>();
     }
     
     public void Dispose()
     {
         var dbContext = ServiceProvider.GetRequiredService<TARge25ShopContext>();
         dbContext.Database.EnsureDeleted();
+    }
+    
+    private void RegisterMacros(ServiceCollection services)
+    {
+        var macroBaseType = typeof(IMacros);
+
+        var macros = macroBaseType.Assembly.GetTypes()
+            .Where(t => macroBaseType.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+
+        foreach (var macro in macros)
+        {
+            services.AddSingleton(macro);
+        }
     }
 }
