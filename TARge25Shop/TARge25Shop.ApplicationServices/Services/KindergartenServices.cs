@@ -36,7 +36,7 @@ public class KindergartenServices : IKindergartenServiceInterface
             UpdatedAt = DateTime.Now,
         };
 
-        _fileServices.UploadFilesToApi(dto, kindergarten);
+        _fileServices.UploadFilesToDatabase(dto, kindergarten);
         
         try
         {
@@ -67,7 +67,7 @@ public class KindergartenServices : IKindergartenServiceInterface
         kindergarten.TeacherName = dto.TeacherName;
         kindergarten.CreatedAt = dto.CreatedAt;
         kindergarten.UpdatedAt = DateTime.Now;
-        _fileServices.UploadFilesToApi(dto, kindergarten);
+        _fileServices.UploadFilesToDatabase(dto, kindergarten);
 
         _dbContext.Kindergartens.Update(kindergarten);
         await _dbContext.SaveChangesAsync();
@@ -92,19 +92,17 @@ public class KindergartenServices : IKindergartenServiceInterface
             return null;
         }
         
-        var images = await _dbContext.FilesToApis
+        var images = await _dbContext.FilesToDatabases
             .Where(x => x.ObjectId == id)
-            .Select(y => new FileToApiDto
+            .Select(y => new FileToDatabaseDto
             {
-                Id = y.Id,
-                ObjectId = y.ObjectId,
-                ExistingFilePath = y.ExistingFilePath
+                Id = y.Id
             }).ToArrayAsync();
         
         try
         {
-            await _fileServices.RemoveImagesFromApi(images);
-            _dbContext.Kindergartens.Remove(result);
+            await _fileServices.RemoveImagesFromDatabase(images);
+            _dbContext.Kindergartens.Remove(result);    
             await _dbContext.SaveChangesAsync();
         }
         catch (Exception e)

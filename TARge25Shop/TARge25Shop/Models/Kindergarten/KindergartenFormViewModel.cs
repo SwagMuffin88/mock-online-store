@@ -7,5 +7,6 @@ public abstract class KindergartenFormViewModel
     public string KindergartenName { get; set; } = string.Empty;
     public string TeacherName { get; set; } = string.Empty;
     
-    public List<IFormFile> Files { get; set; }
+    public List<IFormFile>? Files { get; set; }
+    public List<ImageViewModel>? Images { get; set; } = new List<ImageViewModel>();
 }

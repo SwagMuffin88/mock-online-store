@@ -55,7 +55,8 @@ public class KindergartenController : Controller
             ChildrenCount = viewmodel.ChildrenCount,
             KindergartenName = viewmodel.KindergartenName,
             TeacherName = viewmodel.TeacherName,
-            Files = viewmodel.Files
+            Files = viewmodel.Files,
+            Images = MapToImageDtos(viewmodel)
         };
 
         var result = await _kindergartenService.Create(dto);
@@ -117,7 +118,7 @@ public class KindergartenController : Controller
             CreatedAt = viewmodel.CreatedAt,
             UpdatedAt = viewmodel.UpdatedAt,
             Files = viewmodel.Files,
-            FileToApiDtos = MapToImageDtos(viewmodel)
+            Images = MapToImageDtos(viewmodel)
         };
 
         var result = await _kindergartenService.Update(dto);
@@ -127,7 +128,7 @@ public class KindergartenController : Controller
             return NotFound();
         } 
         
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Details), new {id =  result.Id});
     }
 
     [HttpGet]
@@ -200,44 +201,70 @@ public class KindergartenController : Controller
     }
     
     [HttpPost]
-    public async Task<IActionResult> RemoveImage(ImageViewModel vm)
+    public async Task<IActionResult> RemoveImage(ImageViewModel viewmodel)
     {
-        var dto = new FileToApiDto()
+        var dto = new FileToDatabaseDto
         {
-            Id = vm.ImageId
+            Id = viewmodel.ImageId
         };
 
-        var image = await _fileServices.RemoveImageFromApi(dto);
+        var image = await _fileServices.RemoveImageFromDatabase(dto);
 
         if (image == null)
         {
             return RedirectToAction(nameof(Index));
         }
 
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Update), new {id = image.ObjectId });
     }
-
+    
     private async Task<ImageViewModel[]> GetImagesByKindergartenId(Guid id)
     {
-        var images = await _dbContext.FilesToApis
+        return await _dbContext.FilesToDatabases
             .Where(x => x.ObjectId == id)
             .Select(y => new ImageViewModel
             {
-                FilePath = y.ExistingFilePath,
-                ImageId = y.Id
+                ImageId = y.Id,
+                ImageTitle = y.ImageTitle,
+                ImageData = y.ImageData,
+                KindergartenId = y.ObjectId,
+                Image = string.Format("data:image/gif;base64,{0}", 
+                    Convert.ToBase64String(y.ImageData))
             }).ToArrayAsync();
-        
-        return images;
     }
     
-    private FileToApiDto[] MapToImageDtos(KindergartenUpdateViewmodel viewmodel)
+    private FileToDatabaseDto[] MapToImageDtos(KindergartenFormViewModel viewmodel)
     {
         return viewmodel.Images
-            .Select(x => new FileToApiDto
+            .Select(x => new FileToDatabaseDto
             {
                 Id = x.ImageId,
-                ExistingFilePath = x.FilePath,
+                ImageData = x.ImageData,
+                ImageTitle = x.ImageTitle,
                 ObjectId = x.KindergartenId
             }).ToArray();
     }
+    
+    // private FileToApiDto[] MapToImageDtos(KindergartenUpdateViewmodel viewmodel)
+    // {
+    //     return viewmodel.Images
+    //         .Select(x => new FileToApiDto
+    //         {
+    //             Id = x.ImageId,
+    //             ExistingFilePath = x.FilePath,
+    //             ObjectId = x.KindergartenId
+    //         }).ToArray();
+    // }
+    
+    // private async Task<ImageViewModel[]> GetImagesByKindergartenId(Guid id)
+    // {
+    //     var images = await _dbContext.FilesToApis
+    //         .Where(x => x.ObjectId == id)
+    //         .Select(y => new ImageViewModel
+    //         {
+    //             //
+    //         }).ToArrayAsync();
+    //     
+    //     return images;
+    // }
 }
