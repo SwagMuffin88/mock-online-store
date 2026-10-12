@@ -11,12 +11,14 @@ using TARge25Shop.Data;
 using TARge25BackendTest.mock;
  using TARge25BackendTest.macros;
  using TARge25Shop.Core.Domain;
+ using TARge25Shop.Core.Dto;
 
  namespace TARge25BackendTest;
 
 public abstract class TestBase : IDisposable
 {
     protected IServiceProvider ServiceProvider { get; private set; }
+    protected TARge25ShopContext DbContext { get; private set; }
     
     protected TestBase()
     {
@@ -24,6 +26,9 @@ public abstract class TestBase : IDisposable
         
         SetUpServices(services);
         ServiceProvider = services.BuildServiceProvider();
+        
+        DbContext = ServiceProvider.GetRequiredService<TARge25ShopContext>();
+        DbContext.Database.EnsureCreated();
     }
 
      private void SetUpServices(ServiceCollection services)
@@ -31,7 +36,7 @@ public abstract class TestBase : IDisposable
         services.AddScoped<IFileServices, FileServices>();
         services.AddScoped<IKindergartenServiceInterface, KindergartenServices>();
         services.AddDbContext<TARge25ShopContext>(options =>
-            options.UseInMemoryDatabase("InMemoryDbForTesting")
+            options.UseInMemoryDatabase(Guid.NewGuid().ToString())
         );
         
         services.AddScoped<IHostEnvironment, MockIHostEnvironment>();
@@ -45,10 +50,13 @@ public abstract class TestBase : IDisposable
     
     public void Dispose()
     {
-        var dbContext = Svc<TARge25ShopContext>();
+        DbContext.Database.EnsureDeleted();
+        DbContext.Dispose();
         
-        dbContext.Database.EnsureDeleted();
-        dbContext.Dispose();
+        if (ServiceProvider is IDisposable disposableProvider)
+        {
+            disposableProvider.Dispose();
+        }
     }
     
     private void RegisterMacros(ServiceCollection services)
@@ -69,7 +77,6 @@ public abstract class TestBase : IDisposable
         string kindergartenName = "Seedkindergarten", 
         string groupName = "Hello test")
     {
-        var dbContext = Svc<TARge25ShopContext>();
         var kindergarten = new Kindergarten
         {
             Id = id ?? Guid.NewGuid(),
@@ -81,9 +88,39 @@ public abstract class TestBase : IDisposable
             UpdatedAt = DateTime.Now
         };
         
-        dbContext.Kindergartens.Add(kindergarten);
-        await dbContext.SaveChangesAsync();
+        DbContext.Kindergartens.Add(kindergarten);
+        await DbContext.SaveChangesAsync();
+        
+        DbContext.ChangeTracker.Clear();
 
         return kindergarten;
+    }
+
+    protected KindergartenDto MockKindergartenDtoData(Guid? id = null)
+    {
+        return new KindergartenDto
+        {
+            Id = id ?? Guid.NewGuid(),
+            KindergartenName = "Kindergarten dto test",
+            GroupName = "Dto group",
+            ChildrenCount = 15,
+            TeacherName = "Mari Maasikas",
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
+        };
+    }
+
+    protected KindergartenDto MockKindergartenDtoDataFromExistingData(Kindergarten existing)
+    {
+        return new KindergartenDto
+        {
+            Id = existing.Id,
+            KindergartenName = existing.KindergartenName,
+            GroupName = existing.GroupName,
+            ChildrenCount = existing.ChildrenCount,
+            TeacherName = existing.TeacherName,
+            CreatedAt = existing.CreatedAt,
+            UpdatedAt = DateTime.Now
+        };
     }
 }
