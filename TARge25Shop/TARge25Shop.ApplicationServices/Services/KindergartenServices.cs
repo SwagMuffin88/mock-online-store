@@ -17,6 +17,11 @@ public class KindergartenServices : IKindergartenServiceInterface
     
     public async Task<Kindergarten> Create(KindergartenDto dto)
     {
+        if (string.IsNullOrWhiteSpace(dto.KindergartenName) || string.IsNullOrWhiteSpace(dto.GroupName))
+        {
+            return null;
+        }
+        
         var kindergarten = new Kindergarten
         {
             Id = Guid.NewGuid(),
@@ -34,9 +39,9 @@ public class KindergartenServices : IKindergartenServiceInterface
             
             return kindergarten;
         }
-        catch (Exception e)
+        catch (ArgumentException e)
         {
-            Console.WriteLine($"Error saving new spaceship: {e.Message}");
+            Console.WriteLine($"Error saving new kindergarten: {e.Message}");
             return null;
         }
     }
