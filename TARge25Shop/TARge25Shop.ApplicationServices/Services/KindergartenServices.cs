@@ -48,6 +48,10 @@ public class KindergartenServices : IKindergartenServiceInterface
 
     public async Task<Kindergarten?> Update(KindergartenDto dto)
     {
+        if (string.IsNullOrEmpty(dto.KindergartenName) || string.IsNullOrWhiteSpace(dto.KindergartenName))
+        {
+            return null;
+        }
         var kindergarten = new Kindergarten();
 
         kindergarten.Id = dto.Id;
@@ -66,6 +70,10 @@ public class KindergartenServices : IKindergartenServiceInterface
 
     public async Task<Kindergarten?> DetailAsync(Guid id)
     {
+        if (id == Guid.Empty)
+        {
+            return null;
+        }
         var kindergarten = await _dbContext.Kindergartens
             .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -75,6 +83,10 @@ public class KindergartenServices : IKindergartenServiceInterface
     public async Task<Kindergarten?> Delete(Guid id)
     {
         var result = await DetailAsync(id);
+        if (result == null)
+        {
+            return null;
+        }
         
         _dbContext.Kindergartens.Remove(result);
         await _dbContext.SaveChangesAsync();
