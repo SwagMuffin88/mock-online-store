@@ -1,4 +1,4 @@
-namespace SpaceshipBackendTest;
+namespace TARge25BackendTest;
 
 public class UnitTest1
 {
