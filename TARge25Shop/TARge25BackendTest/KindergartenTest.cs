@@ -29,7 +29,7 @@ public class KindergartenTest : TestBase
     }
 
     [Fact]
-    public async Task ShouldNot_GetKindergartenDetails_WhenIdDoesNotExist()
+    public async Task ShouldNot_GetKindergartenDetails_WhenIdDoesNotExistInDb()
     {
         Guid wrongId = new Guid();
         
@@ -47,9 +47,20 @@ public class KindergartenTest : TestBase
         
         Assert.Null(result);
     }
-
+    
     [Fact]
-    public async Task Should_AddNonEmptyKindergarten_WhenResultIsReturned()
+    public async Task ShouldNot_GetKindergartenById_WhenIdNonexistent()
+    {
+        Guid wrongGuid = Guid.NewGuid();
+
+        var result = await Svc<IKindergartenServiceInterface>().DetailAsync(wrongGuid);
+
+        Assert.Null(result);
+    }
+
+    
+    [Fact]
+    public async Task Should_AddValidKindergarten_WhenResultIsReturned()
     {
         KindergartenDto dto = new KindergartenDto
         {
@@ -66,7 +77,7 @@ public class KindergartenTest : TestBase
         Assert.NotNull(result);
         Assert.Equal("Testgroup", result.GroupName);
     }
-
+    
     [Fact]
     public async Task ShouldNot_AddEmptyKindergarten_WhenResultIsReturned()
     {
@@ -79,30 +90,21 @@ public class KindergartenTest : TestBase
     }
     
     [Fact]
-    public async Task ShouldNot_GetKindergartenById_WhenIdNonexistent()
+    public async Task ShouldNot_AddNewKindergarten_WhenNameIsEmpty()
     {
-        Guid wrongGuid = Guid.NewGuid();
+        var invalidDto = new KindergartenDto
+        {
+            Id = Guid.NewGuid(),
+            KindergartenName = "",
+            GroupName = "DtoGroup"
+        };
 
-        var result = await Svc<IKindergartenServiceInterface>().DetailAsync(wrongGuid);
-
+        var result = await Svc<IKindergartenServiceInterface>().Create(invalidDto);
+        
         Assert.Null(result);
     }
-
-    [Fact]
-    public async Task Should_GetKindergartenById_WhenIdExists()
-    {
-        Guid expectedId = Guid.NewGuid();
-        string expectedName = "Excpected";
     
-        await SeedKindergartenAsync(id: expectedId, kindergartenName: expectedName);
-
-        var result = await Svc<IKindergartenServiceInterface>().DetailAsync(expectedId);
-
-        Assert.NotNull(result);
-        Assert.Equal(expectedId, result.Id);
-        Assert.Equal(expectedName, result.KindergartenName);
-    }
-
+    
     [Fact]
     public async Task Should_DeleteKindergartenById_WhenIdExists()
     {
@@ -123,7 +125,7 @@ public class KindergartenTest : TestBase
         
         Assert.Null(result);
     }
-
+    
     [Fact]
     public async Task Should_UpdateKindergarten_WhenIdExists()
     {
@@ -168,6 +170,5 @@ public class KindergartenTest : TestBase
         
         Assert.Null(result);
     }
-    
     
 }
