@@ -10,7 +10,7 @@ public class KindergartenDto
     public string KindergartenName { get; set; } = string.Empty;
     public string TeacherName { get; set; } = string.Empty;
     public List<IFormFile>? Files { get; set; }
-    public IEnumerable<FileToApiDto> FileToApiDtos { get; set; } = new List<FileToApiDto>();
+    public IEnumerable<FileToDatabaseDto> Images { get; set; } = new List<FileToDatabaseDto>();
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

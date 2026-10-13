@@ -12,4 +12,8 @@ public interface IFileServices
     Task<bool> RemoveImageFromApi(FileToApiDto dto, bool saveChanges = true);
     Task<bool> RemoveImagesFromApi(FileToApiDto[] dtos);
     
+    void UploadFilesToDatabase(KindergartenDto dto, Kindergarten kindergarten);
+    Task<FileToDatabase> RemoveImageFromDatabase(FileToDatabaseDto dto);
+    Task<FileToDatabase> RemoveImagesFromDatabase(FileToDatabaseDto[] dtos);
+    
 }

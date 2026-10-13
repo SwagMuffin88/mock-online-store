@@ -35,6 +35,26 @@ namespace TARge25Shop.Data.Migrations
                     b.ToTable("FilesToApis");
                 });
 
+            modelBuilder.Entity("TARge25Shop.Core.Domain.FileToDatabase", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("ImageTitle")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ObjectId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FilesToDatabases");
+                });
+
             modelBuilder.Entity("TARge25Shop.Core.Domain.Kindergarten", b =>
                 {
                     b.Property<Guid>("Id")

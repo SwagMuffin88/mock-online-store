@@ -11,10 +11,14 @@ public class KindergartenController : Controller
 {
     private readonly IKindergartenServiceInterface _kindergartenService;
     private readonly TARge25ShopContext _dbContext;
-    public KindergartenController(IKindergartenServiceInterface kindergartenService, TARge25ShopContext dbContext)
+    private readonly IFileServices _fileServices;
+    
+    public KindergartenController(
+        IKindergartenServiceInterface kindergartenService, TARge25ShopContext dbContext, IFileServices fileServices)
     {
         _kindergartenService = kindergartenService;
         _dbContext = dbContext;
+        _fileServices = fileServices;
     }
 
     [HttpGet]
@@ -38,7 +42,8 @@ public class KindergartenController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        return View();
+        KindergartenCreateViewModel result = new KindergartenCreateViewModel();
+        return View("Create", result);
     }
 
     [HttpPost]
@@ -50,6 +55,8 @@ public class KindergartenController : Controller
             ChildrenCount = viewmodel.ChildrenCount,
             KindergartenName = viewmodel.KindergartenName,
             TeacherName = viewmodel.TeacherName,
+            Files = viewmodel.Files,
+            Images = MapToImageDtos(viewmodel)
         };
 
         var result = await _kindergartenService.Create(dto);
@@ -74,6 +81,8 @@ public class KindergartenController : Controller
             return NotFound();
         }
 
+        var images = await GetImagesByKindergartenId(id);
+        
         var viewmodel = new KindergartenUpdateViewmodel
         {
             Id = kindergarten.Id,
@@ -84,8 +93,10 @@ public class KindergartenController : Controller
             CreatedAt = kindergarten.CreatedAt,
             UpdatedAt = kindergarten.UpdatedAt
         };
+        
+        viewmodel.Images.AddRange(images);
 
-        return View(viewmodel);
+        return View("Update", viewmodel);
     }
     
     [HttpPost]
@@ -93,7 +104,8 @@ public class KindergartenController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return View(viewmodel);
+            System.Diagnostics.Debug.Print("Kindergarten model state is invalid");
+            return View("Update", viewmodel);
         }
 
         var dto = new KindergartenDto
@@ -104,7 +116,9 @@ public class KindergartenController : Controller
             KindergartenName = viewmodel.KindergartenName,
             TeacherName = viewmodel.TeacherName,
             CreatedAt = viewmodel.CreatedAt,
-            UpdatedAt = viewmodel.UpdatedAt
+            UpdatedAt = viewmodel.UpdatedAt,
+            Files = viewmodel.Files,
+            Images = MapToImageDtos(viewmodel)
         };
 
         var result = await _kindergartenService.Update(dto);
@@ -114,7 +128,7 @@ public class KindergartenController : Controller
             return NotFound();
         } 
         
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Details), new {id =  result.Id});
     }
 
     [HttpGet]
@@ -127,6 +141,8 @@ public class KindergartenController : Controller
             return NotFound();
         }
 
+        var images = await GetImagesByKindergartenId(id);
+
         var viewmodel = new KindergartenDeleteViewmodel
         {
             Id = kindergarten.Id,
@@ -137,6 +153,8 @@ public class KindergartenController : Controller
             CreatedAt = kindergarten.CreatedAt,
             UpdatedAt = kindergarten.UpdatedAt
         };
+        
+        viewmodel.Images.AddRange(images);
 
         return View(viewmodel);
     }
@@ -164,6 +182,8 @@ public class KindergartenController : Controller
             return NotFound();
         }
 
+        var images = await GetImagesByKindergartenId(id);
+
         var viewmodel = new KindergartenDetailsViewmodel
         {
             Id = kindergarten.Id,
@@ -174,7 +194,77 @@ public class KindergartenController : Controller
             CreatedAt = kindergarten.CreatedAt,
             UpdatedAt = kindergarten.UpdatedAt
         };
+        
+        viewmodel.Images.AddRange(images);
 
         return View(viewmodel);
     }
+    
+    [HttpPost]
+    public async Task<IActionResult> RemoveImage(ImageViewModel viewmodel)
+    {
+        var dto = new FileToDatabaseDto
+        {
+            Id = viewmodel.ImageId
+        };
+
+        var image = await _fileServices.RemoveImageFromDatabase(dto);
+
+        if (image == null)
+        {
+            return RedirectToAction(nameof(Index));
+        }
+
+        return RedirectToAction(nameof(Update), new {id = image.ObjectId });
+    }
+    
+    private async Task<ImageViewModel[]> GetImagesByKindergartenId(Guid id)
+    {
+        return await _dbContext.FilesToDatabases
+            .Where(x => x.ObjectId == id)
+            .Select(y => new ImageViewModel
+            {
+                ImageId = y.Id,
+                ImageTitle = y.ImageTitle,
+                ImageData = y.ImageData,
+                KindergartenId = y.ObjectId,
+                Image = string.Format("data:image/gif;base64,{0}", 
+                    Convert.ToBase64String(y.ImageData))
+            }).ToArrayAsync();
+    }
+    
+    private FileToDatabaseDto[] MapToImageDtos(KindergartenFormViewModel viewmodel)
+    {
+        return viewmodel.Images
+            .Select(x => new FileToDatabaseDto
+            {
+                Id = x.ImageId,
+                ImageData = x.ImageData,
+                ImageTitle = x.ImageTitle,
+                ObjectId = x.KindergartenId
+            }).ToArray();
+    }
+    
+    // private FileToApiDto[] MapToImageDtos(KindergartenUpdateViewmodel viewmodel)
+    // {
+    //     return viewmodel.Images
+    //         .Select(x => new FileToApiDto
+    //         {
+    //             Id = x.ImageId,
+    //             ExistingFilePath = x.FilePath,
+    //             ObjectId = x.KindergartenId
+    //         }).ToArray();
+    // }
+    
+    // private async Task<ImageViewModel[]> GetImagesByKindergartenId(Guid id)
+    // {
+    //     var images = await _dbContext.FilesToApis
+    //         .Where(x => x.ObjectId == id)
+    //         .Select(y => new ImageViewModel
+    //         {
+    //             //
+    //         }).ToArrayAsync();
+    //     
+    //     return images;
+    // }
 }

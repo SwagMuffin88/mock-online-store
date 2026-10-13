@@ -42,12 +42,12 @@ public class SpaceshipController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        SpaceshipCreateViewViewModel result = new();
+        SpaceshipCreateViewModel result = new();
         return View("Create", result);
     }
     
     [HttpPost]
-    public async Task<IActionResult> Create(SpaceshipCreateViewViewModel viewmodel)
+    public async Task<IActionResult> Create(SpaceshipCreateViewModel viewmodel)
     {
         var dto = new SpaceshipDto
         {
@@ -236,7 +236,7 @@ public class SpaceshipController : Controller
             {
                 Id = x.ImageId,
                 ExistingFilePath = x.FilePath,
-                SpaceshipId = x.SpaceshipId
+                ObjectId = x.SpaceshipId
             }).ToArray();
     }
 }
