@@ -21,10 +21,17 @@ namespace TARge25Shop
             builder.Services.AddScoped<IKindergartenServiceInterface, KindergartenServices>();
             builder.Services.AddScoped<IFileServices, FileServices>();
             builder.Services.AddScoped<IRealEstateServices, RealEstateServices>();
+            builder.Services.AddScoped<IChuckNorrisServices, ChuckNorrisServices>();
             
             builder.Services.AddDbContext<TARge25ShopContext>(options =>
                 options.UseSqlite(
                     builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddHttpClient("ChuckNorrisJokesApi", client =>
+            {
+                client.BaseAddress = new Uri("https://api.chucknorris.io/");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
             
             var app = builder.Build();
 
@@ -46,6 +53,12 @@ namespace TARge25Shop
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
+            
+            // app.MapGet("/norris-joke", async (ChuckNorrisServices service) =>
+            // {
+            //     var joke = await service.ChuckNorrisResultHttpClient();
+            //     return Results.Ok(joke);
+            // });
 
             app.Run();
         }

@@ -1,0 +1,56 @@
+@model TARge25Shop.Models.ChuckNorris.ChuckNorrisViewModel
+
+@{
+    ViewData["Title"] = "Chuck Norris Joke";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white d-flex align-items-center">
+                    @if (!string.IsNullOrEmpty(Model.IconUrl))
+                    {
+                        <img src="@Model.IconUrl" alt="Chuck Norris Icon" class="me-2 rounded-circle" style="width: 32px; height: 32px;" />
+                    }
+                    <h4 class="mb-0 fs-5">Chuck Norris</h4>
+                </div>
+                
+                <div class="card-body">
+                    <figure class="mb-4">
+                        <blockquote class="blockquote">
+                            <p class="fs-4">"@Model.Value"</p>
+                        </blockquote>
+                        <figcaption class="blockquote-footer text-muted mt-2">
+                            Joke ID: <cite title="ID">@Model.Id</cite>
+                        </figcaption>
+                    </figure>
+
+                    <div class="mb-3">
+                        <strong>Kategooriad:</strong>
+                        @if (Model.Categories.Count > 0)
+                        {
+                            foreach (var category in Model.Categories)
+                            {
+                                <span class="badge bg-secondary me-1">@category</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="badge bg-light text-dark border">Üldine (Uncategorized)</span>
+                        }
+                    </div>
+                    
+                    <div class="text-muted small border-top pt-3">
+                        <div><strong>Loodud:</strong> @Model.CreatedAt.ToString("g")</div>
+                        <div><strong>Uuendatud:</strong> @Model.UpdatedAt.ToString("g")</div>
+                    </div>
+                </div>
+
+                <div class="card-footer text-end bg-light">
+                    <a href="" class="btn btn-primary btn-sm">Hangi uus nali</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
