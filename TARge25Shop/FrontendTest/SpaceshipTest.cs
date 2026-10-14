@@ -4,7 +4,7 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using Xunit;
 
-namespace TARge25FrontendTest;
+namespace FrontendTest;
 
 public class SpaceshipTest
 {
@@ -103,6 +103,9 @@ public class SpaceshipTest
 
     private static IWebDriver SetupAndNavigateIndex()
     {
+        FirefoxOptions options = new FirefoxOptions();
+        options.AddArgument("--headless");
+        
         IWebDriver driver = new FirefoxDriver();
         driver.Url = "http://localhost:5277/";
         

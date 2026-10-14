@@ -1,6 +1,6 @@
 <Solution>
-  <Project Path="TARge25BackendTest\TARge25BackendTest.csproj" />
-  <Project Path="TARge25FrontendTest/TARge25FrontendTest.csproj" />
+  <Project Path="BackendTest/BackendTest.csproj" />
+  <Project Path="FrontendTest/FrontendTest.csproj" />
   <Project Path="TARge25Shop.ApplicationServices\TARge25Shop.ApplicationServices.csproj" />
   <Project Path="TARge25Shop.Core\TARge25Shop.Core.csproj" />
   <Project Path="TARge25Shop.Data\TARge25Shop.Data.csproj" />
