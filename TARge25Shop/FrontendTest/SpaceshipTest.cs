@@ -97,6 +97,63 @@ public class SpaceshipTest
         }
     }
 
+    [Fact]
+    public void Should_UpdateDetails_OfASpaceShip_WithNewData()
+    {
+        IWebDriver driver = SetupAndNavigateIndex();
+
+        var table = driver.FindElement(By.Id("IndexTable"));
+        List<IWebElement> rows = table.FindElements(By.TagName("tr")).ToList();
+        rows.RemoveAt(0);
+
+        foreach (var row in rows)
+        {
+
+            var locatedelement = row.FindElement(By.Id("IndexNameSpaceship"));
+            if (locatedelement.Text == "Apollo 11")
+            {
+                var rowelement = row.FindElement(By.Id("IndexActionsSpaceship"));
+                var button = rowelement.FindElement(By.Id("IndexSpaceshipUpdate"));
+                button.Click();
+                Thread.Sleep(500);
+                break;
+            }
+        }
+
+        InsertSpaceshipData(driver, true);
+        
+        Thread.Sleep(3000);
+        
+        var updatedTable = driver.FindElement(By.Id("IndexTable"));
+        List<IWebElement> updatedRows = updatedTable.FindElements(By.TagName("tr")).ToList();
+        updatedRows.RemoveAt(0);
+        
+        bool updatedFound = false;
+        string updatedName = "";
+        string updatedType = "";
+        string updatedCrew = "";
+        
+        foreach (var row in updatedRows)
+        {
+            var nameElement = row.FindElement(By.Id("IndexNameSpaceship"));
+            if (nameElement.Text == "Enterprise-D")
+            {
+                updatedName = nameElement.Text;
+                updatedType = row.FindElement(By.Id("IndexTypeSpaceship")).Text;
+                updatedCrew = row.FindElement(By.Id("IndexCrewSpaceship")).Text;
+                updatedFound = true;
+                break;
+            }
+        }
+        
+        Assert.True(updatedFound, "Updated spaceship 'Enterprise-D' was not found in the index table.");
+        Assert.Equal("Enterprise-D", updatedName);
+        Assert.Equal("Explorer", updatedType);
+        Assert.Equal("5", updatedCrew);
+        
+        driver.Quit();
+    }
+
     private static IWebDriver SetupAndNavigateIndex()
     {
         FirefoxOptions options = new FirefoxOptions();
@@ -111,19 +168,21 @@ public class SpaceshipTest
         return driver;
     }
 
-    private void InsertSpaceshipData(IWebDriver driver, bool isOneOrTwo = false)
+    private void InsertSpaceshipData(IWebDriver driver, bool isUpdate = false)
     {
-        string name = isOneOrTwo ? "Enterprise-D" : "Apollo 11";
-        string shipType = isOneOrTwo ? "Explorer" : "Command Module";
-        string crew = isOneOrTwo ? "5" : "3";
-        string enginePower = isOneOrTwo ? "9000" : "5000";
+        string name = isUpdate ? "Enterprise-D" : "Apollo 11";
+        string shipType = isUpdate ? "Explorer" : "Command Module";
+        string crew = isUpdate ? "5" : "3";
+        string enginePower = isUpdate ? "9000" : "5000";
+        string elementId = isUpdate ? "CU_UpdateSpaceship" : "CU_CreateSpaceship";
 
         SetInputValue(driver, By.Id("CU_NameEntrySpaceship"), name);
         SetInputValue(driver, By.Id("CU_ShipTypeEntrySpaceship"), shipType);
         SetInputValue(driver, By.Id("CU_CrewEntrySpaceship"), crew);
         SetInputValue(driver, By.Id("CU_EnginePowerEntrySpaceship"), enginePower);
         
-        driver.FindElement(By.Id("CU_CreateSpaceship")).Click();
+        
+        driver.FindElement(By.Id(elementId)).Click();
     }
 
     private void SetInputValue(IWebDriver driver, By locator, string value)
