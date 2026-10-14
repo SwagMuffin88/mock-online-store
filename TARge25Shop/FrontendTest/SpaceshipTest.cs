@@ -17,20 +17,16 @@ public class SpaceshipTest
         WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
         
         // Action
-        // TODO fix create button click (timeout)
         IWebElement createInIndex = wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("CreateInIndex")));
         createInIndex.Click();
 
         // Input data
         InsertSpaceshipData(driver);
         
-        IWebElement cu_CreateSpaceship = driver.FindElement(By.Id("CU_CreateSpaceship"));
-        cu_CreateSpaceship.Click();
-        
         Thread.Sleep(3000);
         
         // Data collected after reload
-        IWebElement indexNameSpaceship = driver.FindElement(By.Id("CU_IndexNameSpaceship"));
+        IWebElement indexNameSpaceship = driver.FindElement(By.Id("IndexNameSpaceship"));
         var spaceShipNameData = indexNameSpaceship.Text;
         
         IWebElement indexTypeSpaceship = driver.FindElement(By.Id("IndexTypeSpaceship"));
@@ -62,7 +58,7 @@ public class SpaceshipTest
         {
             var locadedElement = row.FindElement(By.Id("IndexNameSpaceship"));
 
-            if (locadedElement.Text == "Command Module")
+            if (locadedElement.Text == "Apollo 11")
             {
                 var actionElement = row.FindElement(By.Id("IndexActionsSpaceship"));
                 var detailsButton = actionElement.FindElement(By.Id("IndexSpaceshipDetails"));
