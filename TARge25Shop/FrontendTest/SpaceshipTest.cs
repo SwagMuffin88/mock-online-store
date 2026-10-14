@@ -15,31 +15,31 @@ public class SpaceshipTest
         IWebDriver driver = SetupAndNavigateIndex();
 
         WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        
+
         // Action
         IWebElement createInIndex = wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("CreateInIndex")));
         createInIndex.Click();
 
         // Input data
         InsertSpaceshipData(driver);
-        
+
         Thread.Sleep(3000);
-        
+
         // Data collected after reload
         IWebElement indexNameSpaceship = driver.FindElement(By.Id("IndexNameSpaceship"));
         var spaceShipNameData = indexNameSpaceship.Text;
-        
+
         IWebElement indexTypeSpaceship = driver.FindElement(By.Id("IndexTypeSpaceship"));
         var spaceShipTypeData = indexTypeSpaceship.Text;
-        
+
         IWebElement indexCrewSpaceship = driver.FindElement(By.Id("IndexCrewSpaceship"));
         var spaceShipCrewData = indexCrewSpaceship.Text;
-        
+
         // Verification
         Assert.Equal("Apollo 11", spaceShipNameData);
         Assert.Equal("Command Module", spaceShipTypeData);
         Assert.Equal("3", spaceShipCrewData);
-        
+
         driver.Quit();
     }
 
@@ -67,14 +67,14 @@ public class SpaceshipTest
                 found = true;
                 break;
             }
-            
+
             Assert.True(found, "Spaceship was not found in the table.");
-            
+
             Thread.Sleep(3000);
 
             IWebElement details_SpaceshipId = driver.FindElement(By.Id("Details_SpaceshipId"));
             var details_id = details_SpaceshipId.Text;
-            
+
             IWebElement details_SpaceshipName = driver.FindElement(By.Id("Details_SpaceshipName"));
             var details_name = details_SpaceshipName.Text;
 
@@ -92,7 +92,7 @@ public class SpaceshipTest
             Assert.Equal("Command Module", details_type);
             Assert.Equal("3", details_crew);
             Assert.Equal("5000", details_power);
-            
+
             driver.Quit();
         }
     }
@@ -108,7 +108,6 @@ public class SpaceshipTest
 
         foreach (var row in rows)
         {
-
             var locatedelement = row.FindElement(By.Id("IndexNameSpaceship"));
             if (locatedelement.Text == "Apollo 11")
             {
@@ -121,18 +120,18 @@ public class SpaceshipTest
         }
 
         InsertSpaceshipData(driver, true);
-        
+
         Thread.Sleep(3000);
-        
+
         var updatedTable = driver.FindElement(By.Id("IndexTable"));
         List<IWebElement> updatedRows = updatedTable.FindElements(By.TagName("tr")).ToList();
         updatedRows.RemoveAt(0);
-        
+
         bool updatedFound = false;
         string updatedName = "";
         string updatedType = "";
         string updatedCrew = "";
-        
+
         foreach (var row in updatedRows)
         {
             var nameElement = row.FindElement(By.Id("IndexNameSpaceship"));
@@ -145,12 +144,66 @@ public class SpaceshipTest
                 break;
             }
         }
-        
+
         Assert.True(updatedFound, "Updated spaceship 'Enterprise-D' was not found in the index table.");
         Assert.Equal("Enterprise-D", updatedName);
         Assert.Equal("Explorer", updatedType);
         Assert.Equal("5", updatedCrew);
-        
+
+        driver.Quit();
+    }
+
+    [Fact]
+    public void Should_DeleteSpaceship_FromAppVIADeleteView()
+    {
+        IWebDriver driver = SetupAndNavigateIndex();
+
+        var table = driver.FindElement(By.Id("IndexTable"));
+        List<IWebElement> rows = table.FindElements(By.TagName("tr")).ToList();
+        rows.RemoveAt(0);
+
+        bool found = false;
+
+        foreach (var row in rows)
+        {
+            var locatedelement = row.FindElement(By.Id("IndexNameSpaceship"));
+
+            if (locatedelement.Text == "Enterprise-D")
+            {
+                var rowelement = row.FindElement(By.Id("IndexActionsSpaceship"));
+                var button = rowelement.FindElement(By.Id("IndexSpaceshipDelete"));
+                button.Click();
+
+                found = true;
+                Thread.Sleep(500);
+                break;
+            }
+        }
+
+        Assert.True(found, "Spaceship to delete was not found in the table.");
+
+        var clickthisbutton = driver.FindElement(By.Id("Delete_Delete"));
+        clickthisbutton.Click();
+
+        Thread.Sleep(3000);
+
+        var updatedTable = driver.FindElement(By.Id("IndexTable"));
+        List<IWebElement> updatedRows = updatedTable.FindElements(By.TagName("tr")).ToList();
+        updatedRows.RemoveAt(0);
+
+        bool stillExists = false;
+        foreach (var row in updatedRows)
+        {
+            var nameElement = row.FindElement(By.Id("IndexNameSpaceship"));
+            if (nameElement.Text == "Enterprise-D")
+            {
+                stillExists = true;
+                break;
+            }
+        }
+
+        Assert.False(stillExists, "Spaceship 'Enterprise-D' was successfully deleted, but still appears in the table.");
+
         driver.Quit();
     }
 
@@ -158,13 +211,13 @@ public class SpaceshipTest
     {
         FirefoxOptions options = new FirefoxOptions();
         options.AddArgument("--headless");
-        
+
         IWebDriver driver = new FirefoxDriver();
         driver.Url = "http://localhost:5277/";
-        
+
         IWebElement navigateToSpaceship = driver.FindElement(By.LinkText("Spaceship"));
         navigateToSpaceship.Click();
-        
+
         return driver;
     }
 
@@ -180,8 +233,8 @@ public class SpaceshipTest
         SetInputValue(driver, By.Id("CU_ShipTypeEntrySpaceship"), shipType);
         SetInputValue(driver, By.Id("CU_CrewEntrySpaceship"), crew);
         SetInputValue(driver, By.Id("CU_EnginePowerEntrySpaceship"), enginePower);
-        
-        
+
+
         driver.FindElement(By.Id(elementId)).Click();
     }
 
