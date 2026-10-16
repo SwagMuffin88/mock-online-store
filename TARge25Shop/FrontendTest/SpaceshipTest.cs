@@ -2,13 +2,16 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using Xunit;
 
 namespace FrontendTest;
 
+[TestCaseOrderer(
+    ordererTypeName: "FrontendTest.PriorityOrderer",
+    ordererAssemblyName: "FrontendTest")]
 public class SpaceshipTest
 {
     [Fact]
+    [Order(1)]
     public void Should_NavigateToCreate_AddSpaceship_WithCorrectData_ReturnToIndex()
     {
         // Setup
@@ -44,6 +47,7 @@ public class SpaceshipTest
     }
 
     [Fact]
+    [Order(2)]
     public void Should_NavigateToDetails_OfASpaceShip_WithPreviouslyCorrectData()
     {
         IWebDriver driver = SetupAndNavigateIndex();
@@ -98,6 +102,7 @@ public class SpaceshipTest
     }
 
     [Fact]
+    [Order(3)]
     public void Should_UpdateDetails_OfASpaceShip_WithNewData()
     {
         IWebDriver driver = SetupAndNavigateIndex();
@@ -154,6 +159,7 @@ public class SpaceshipTest
     }
 
     [Fact]
+    [Order(4)]
     public void Should_DeleteSpaceship_FromAppVIADeleteView()
     {
         IWebDriver driver = SetupAndNavigateIndex();
