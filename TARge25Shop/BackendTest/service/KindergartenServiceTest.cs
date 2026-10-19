@@ -6,11 +6,12 @@ using TARge25Shop.ApplicationServices.Services;
 using TARge25Shop.Core;
 using TARge25Shop.Core.Dto;
 using TARge25Shop.Data;
+using Moq;
 using Xunit;
 
-namespace TARge25BackendTest;
+namespace TARge25BackendTest.service;
 
-public class KindergartenTest : TestBase
+public class KindergartenServiceTest : TestBase
 {
     [Fact]
     public async Task Should_GetKindergartenDetails_WhenIdExists()
@@ -187,7 +188,28 @@ public class KindergartenTest : TestBase
         
         Assert.Null(result);
     }
-    
-    
+
+    [Fact]
+    public async Task Should_UploadImage_WhenDtoHasValidImage()
+    {
+        var kindergartenId = Guid.NewGuid();
+        string tinyPngBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+        byte[] imageBytes = Convert.FromBase64String(tinyPngBase64);
+        
+        var dto = MockKindergartenDtoData(id: kindergartenId);
+
+        var imageDto = new FileToDatabaseDto
+        {
+            Id = Guid.NewGuid(),
+            ImageData = imageBytes,
+            ImageTitle = "test_image",
+            ObjectId = kindergartenId
+        };
+
+        dto.Images = new List<FileToDatabaseDto> { imageDto };
+        var result = await Svc<IKindergartenServiceInterface>().Create(dto);
+
+        Assert.NotNull(result);
+    }
     
 }

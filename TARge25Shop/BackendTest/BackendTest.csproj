@@ -20,6 +20,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.12" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.12" />
+    <PackageReference Include="Moq" Version="4.21.0" />
     <PackageReference Include="xunit.v3.mtp-v2" Version="4.0.2" />
   </ItemGroup>
 
@@ -27,6 +28,7 @@
     <ProjectReference Include="..\TARge25Shop.Data\TARge25Shop.Data.csproj" />
     <ProjectReference Include="..\TARge25Shop.Core\TARge25Shop.Core.csproj" />
     <ProjectReference Include="..\TARge25Shop.ApplicationServices\TARge25Shop.ApplicationServices.csproj" />
+    <ProjectReference Include="..\TARge25Shop\TARge25Shop.csproj" />
   </ItemGroup>
 
 </Project>
