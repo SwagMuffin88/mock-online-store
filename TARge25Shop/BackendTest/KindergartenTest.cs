@@ -22,6 +22,7 @@ public class KindergartenTest : TestBase
         await SeedKindergartenAsync(id: expectedId, kindergartenName: expectedName, groupName: expectedGroupName);
 
         var result = await Svc<IKindergartenServiceInterface>().DetailAsync(expectedId);
+        
         Assert.NotNull(result);
         Assert.Equal(expectedId, result.Id);
         Assert.Equal(expectedName, result.KindergartenName);
@@ -29,7 +30,7 @@ public class KindergartenTest : TestBase
     }
 
     [Fact]
-    public async Task ShouldNot_GetKindergartenDetails_WhenIdDoesNotExistInDb()
+    public async Task ShouldNot_GetKindergartenDetails_WhenIdDoesNotExist()
     {
         Guid wrongId = new Guid();
         
@@ -76,6 +77,7 @@ public class KindergartenTest : TestBase
         
         Assert.NotNull(result);
         Assert.Equal("Testgroup", result.GroupName);
+        Assert.Equal("Kindergarten 1", result.KindergartenName);
     }
     
     [Fact]
@@ -97,6 +99,21 @@ public class KindergartenTest : TestBase
             Id = Guid.NewGuid(),
             KindergartenName = "",
             GroupName = "DtoGroup"
+        };
+
+        var result = await Svc<IKindergartenServiceInterface>().Create(invalidDto);
+        
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task ShouldNot_AddNewKindergarten_WhenGroupNameIsEmpty()
+    {
+        var invalidDto = new KindergartenDto
+        {
+            Id = Guid.NewGuid(),
+            KindergartenName = "Kindergarten 2",
+            GroupName = ""
         };
 
         var result = await Svc<IKindergartenServiceInterface>().Create(invalidDto);
@@ -170,5 +187,7 @@ public class KindergartenTest : TestBase
         
         Assert.Null(result);
     }
+    
+    
     
 }
