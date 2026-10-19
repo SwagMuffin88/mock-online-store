@@ -104,12 +104,13 @@ public class KindergartenServices : IKindergartenServiceInterface
             await _fileServices.RemoveImagesFromDatabase(images);
             _dbContext.Kindergartens.Remove(result);    
             await _dbContext.SaveChangesAsync();
+            
+            return result;
         }
         catch (Exception e)
         {
             Debug.WriteLine("Exception:  " + e.Message);
+            return null;
         }
-
-        return result;
     }
 }
