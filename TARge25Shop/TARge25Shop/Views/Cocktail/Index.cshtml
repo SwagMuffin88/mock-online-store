@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "Cocktail Search";
+}
+
+<h1>Search Cocktails</h1>
+
+<form asp-controller="Cocktail" asp-action="Search" method="get">
+    <div class="form-group">
+        <label for="name">Cocktail name</label>
+        <input type="text"
+               id="name"
+               name="name"
+               class="form-control"
+               placeholder="e.g. Margarita, Mojito"
+               required />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">
+        Search
+    </button>
+</form>
