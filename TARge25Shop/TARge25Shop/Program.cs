@@ -37,7 +37,7 @@ namespace TARge25Shop
 
             builder.Services.AddHttpClient("CocktailAPI", client =>
             {
-                client.BaseAddress = new Uri("https://www.thecocktaildb.com/api/json/v1/1/");
+                client.BaseAddress = new Uri("https://www.thecocktaildb.com/api/json/v1/");
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
             

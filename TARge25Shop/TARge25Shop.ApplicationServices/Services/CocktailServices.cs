@@ -17,10 +17,11 @@ public class CocktailServices : ICocktailServices
         _logger = logger;
     }
 
-    public async Task<CocktailRootDto> CocktailResultHttpClient(string name)
+    public async Task<CocktailRootDto> GetCocktailsFromHttpClient(string name)
     {
         _logger.LogInformation("API request started...");
-        var requestUri = $"search.php?s={Uri.EscapeDataString(name)}";
+        string apiKey = "1";
+        var requestUri = $"{apiKey}/search.php?s={Uri.EscapeDataString(name)}";
         var client = _httpClientFactory.CreateClient("CocktailAPI");
 
         try

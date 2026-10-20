@@ -28,7 +28,7 @@ public class CocktailController : Controller
             return View("Index");
         }
         
-        var response = await _cocktailService.CocktailResultHttpClient(name);
+        var response = await _cocktailService.GetCocktailsFromHttpClient(name);
 
         if (response == null)
         {
