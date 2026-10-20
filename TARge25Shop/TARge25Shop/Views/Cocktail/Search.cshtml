@@ -1,0 +1,58 @@
+@model TARge25Shop.Models.Cocktail.CocktailSearchViewModel
+
+@{
+    ViewData["Title"] = "Cocktail Results";
+}
+
+<h1>Cocktail search results</h1>
+
+<p>Search: @Model.SearchName</p>
+
+@if (Model.Cocktails.Count == 0)
+{
+    <p>No cocktails found. Try another name.</p>
+}
+else
+{
+    @foreach (var cocktail in Model.Cocktails)
+    {
+        <div class="card mb-4 p-3">
+            <h2>@cocktail.Name</h2>
+
+            @if (!string.IsNullOrEmpty(cocktail.ImageUrl))
+            {
+                <img src="@cocktail.ImageUrl"
+                     alt="@cocktail.Name"
+                     style="max-width: 300px;" />
+            }
+
+            <p><strong>Category:</strong> @cocktail.Category</p>
+            <p><strong>Glass:</strong> @cocktail.Glass</p>
+
+            <h4>Ingredients</h4>
+            <ul>
+                @if (!string.IsNullOrWhiteSpace(cocktail.Ingredient1))
+                {
+                    <li>@cocktail.Measure1 @cocktail.Ingredient1</li>
+                }
+                @if (!string.IsNullOrWhiteSpace(cocktail.Ingredient2))
+                {
+                    <li>@cocktail.Measure2 @cocktail.Ingredient2</li>
+                }
+                @if (!string.IsNullOrWhiteSpace(cocktail.Ingredient3))
+                {
+                    <li>@cocktail.Measure3 @cocktail.Ingredient3</li>
+                }
+                @if (!string.IsNullOrWhiteSpace(cocktail.Ingredient4))
+                {
+                    <li>@cocktail.Measure4 @cocktail.Ingredient4</li>
+                }
+            </ul>
+
+            <h4>Instructions</h4>
+            <p>@cocktail.Instructions</p>
+        </div>
+    }
+}
+
+<button asp-controller="Cocktail" asp-action="Index">Back to search</button>
