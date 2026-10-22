@@ -24,6 +24,7 @@ namespace TARge25Shop
             builder.Services.AddScoped<IRealEstateServices, RealEstateServices>();
             builder.Services.AddScoped<IChuckNorrisServices, ChuckNorrisServices>();
             builder.Services.AddScoped<ICocktailServices, CocktailServices>();
+            builder.Services.AddScoped<IWeatherService, WeatherService>();
             
             builder.Services.AddDbContext<TARge25ShopContext>(options =>
                 options.UseSqlite(
@@ -38,6 +39,12 @@ namespace TARge25Shop
             builder.Services.AddHttpClient("CocktailAPI", client =>
             {
                 client.BaseAddress = new Uri("https://www.thecocktaildb.com/api/json/v1/");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
+
+            builder.Services.AddHttpClient("OpenWeatherMapAPI", client =>
+            {
+                client.BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/");
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
             
