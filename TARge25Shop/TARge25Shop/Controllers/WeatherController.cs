@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TARge25Shop.ApplicationServices.Services;
+using TARge25Shop.Core.Helpers.weather;
 using TARge25Shop.Core.ServiceInterface;
 using TARge25Shop.Models.Weather;
 
@@ -39,7 +40,13 @@ public class WeatherController : Controller
         viewModel.CityName = weatherDto.Name;
         viewModel.Temperature = weatherDto.Main.Temp;
         viewModel.Humidity = weatherDto.Main.Humidity;
-        viewModel.Description = weatherDto.Weather.FirstOrDefault()?.Description ?? "";
+
+        var weatherInfo = weatherDto.Weather.FirstOrDefault();
+
+        if (weatherInfo != null)
+        {
+            viewModel.Description = WeatherDescriptionHelper.GetEstonianDescription(weatherInfo.Id, weatherInfo.Description);
+        }
 
         return View(viewModel);
     }
