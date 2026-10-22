@@ -1,0 +1,37 @@
+@model TARge25Shop.Models.Weather.WeatherViewModel
+
+@{
+    ViewData["Title"] = "Ilmateade";
+}
+
+<div class="container mt-5">
+    <h2>Maailma linnade ilmateade</h2>
+
+    <form method="get" asp-action="Index" class="row g-3 mt-3">
+        <div class="col-auto">
+            <label for="SelectedCity" class="col-form-label">Vali linn:</label>
+        </div>
+        <div class="col-auto">
+            <select asp-for="SelectedCity" asp-items="@(new SelectList(Model.AvailableCities, Model.SelectedCity))" 
+                    class="form-select" onchange="this.form.submit()">
+            </select>
+        </div>
+    </form>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger mt-3">Valitud linna andmeid ei leitud.</div>
+    }
+    
+    @if (ViewData.ModelState.IsValid && !string.IsNullOrEmpty(Model.CityName))
+    {
+        <div class="card mt-4" style="width: 18rem;">
+            <div class="card-body">
+                <h3 class="card-title">@Model.CityName</h3>
+                <h4 class="card-subtitle mb-2 text-muted">@Model.Temperature °C</h4>
+                <p class="card-text text-capitalize"><strong>Kirjeldus:</strong> @Model.Description</p>
+                <p class="card-text"><strong>Õhuniiskus:</strong> @Model.Humidity%</p>
+            </div>
+        </div>
+    }
+</div>
