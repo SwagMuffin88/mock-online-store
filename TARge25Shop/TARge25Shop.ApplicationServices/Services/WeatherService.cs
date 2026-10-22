@@ -17,7 +17,7 @@ public class WeatherService : IWeatherService
         _logger = logger;
         _httpClientFactory = httpClientFactory;
         
-        _apiKey = Environment.GetEnvironmentVariable("API_KEY");
+        _apiKey = Environment.GetEnvironmentVariable("OPENWEATHER_API_KEY");
     }
 
     public async Task<WeatherResponseDto?> GetWeatherAsync(string cityName)
