@@ -11,6 +11,7 @@ namespace TARge25Shop
     {
         public static void Main(string[] args)
         {
+            DotNetEnv.Env.Load();
             // MVC pattern: https://learn.microsoft.com/en-us/aspnet/core/mvc/overview?view=aspnetcore-10.0
             
             var builder = WebApplication.CreateBuilder(args);
