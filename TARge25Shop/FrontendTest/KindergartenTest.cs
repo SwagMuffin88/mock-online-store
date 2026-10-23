@@ -250,6 +250,40 @@ public class KindergartenTest
         
         driver.Quit();
     }
+
+    [Fact]
+    [Order(7)]
+    public void Should_CreateMultipleKindergartens_AndDisplayAllInIndexTable()
+    {
+        var driver = SetupAndNavigateIndex();
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        
+        driver.FindElement(By.Id("CreateInIndex")).Click();
+        
+        SetInputValue(driver, By.Id("CU_KindergartenNameEntry"), "Esimene lasteaed");
+        SetInputValue(driver, By.Id("CU_GroupNameEntry"), "Tõrukesed");
+        SetInputValue(driver, By.Id("CU_ChildrenCountEntry"), "10");
+        SetInputValue(driver, By.Id("CU_TeacherNameEntry"), "Anne Anni");
+        
+        driver.FindElement(By.Id("CU_CreateKindergarten")).Click();
+        Thread.Sleep(2000);
+        
+        driver.FindElement(By.Id("CreateInIndex")).Click();
+        
+        SetInputValue(driver, By.Id("CU_KindergartenNameEntry"), "Teine lasteaed");
+        SetInputValue(driver, By.Id("CU_GroupNameEntry"), "Mesilased");
+        SetInputValue(driver, By.Id("CU_ChildrenCountEntry"), "14");
+        SetInputValue(driver, By.Id("CU_TeacherNameEntry"), "Mai Tomingas");
+        
+        driver.FindElement(By.Id("CU_CreateKindergarten")).Click();
+        Thread.Sleep(2000);
+        
+        var table = driver.FindElement(By.Id("IndexTable"));
+        var pageSource = table.Text;
+
+        Assert.Contains("Esimene lasteaed", pageSource);
+        Assert.Contains("Teine lasteaed", pageSource);
+    }
     
     private static IWebDriver SetupAndNavigateIndex()
     {
