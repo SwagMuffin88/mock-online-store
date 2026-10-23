@@ -228,6 +228,28 @@ public class KindergartenTest
         
         driver.Quit();
     }
+
+    [Fact]
+    [Order(6)]
+    public void Should_NavigateBackToIndex_WhenCancelOrBackIsClicked()
+    {
+        var driver = SetupAndNavigateIndex();
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+
+        var createInIndex = wait.Until(
+            ExpectedConditions.ElementToBeClickable(By.Id("CreateInIndex")));
+        createInIndex.Click();
+
+        var backButton = wait.Until(
+            ExpectedConditions.ElementToBeClickable(By.Id("CU_Back")));
+        backButton.Click();
+        
+        Thread.Sleep(2000);
+        
+        Assert.Contains("/kindergarten", driver.Url);
+        
+        driver.Quit();
+    }
     
     private static IWebDriver SetupAndNavigateIndex()
     {
