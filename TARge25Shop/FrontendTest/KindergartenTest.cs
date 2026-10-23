@@ -139,6 +139,62 @@ public class KindergartenTest
         driver.Quit();
     }
 
+    [Fact]
+    public void Should_DeleteKindergarten_WhenKindergartenExists()
+    {
+        IWebDriver driver = SetupAndNavigateIndex();
+
+        var table = driver.FindElement(By.Id("IndexTable"));
+        List<IWebElement> rows = table.FindElements(By.TagName("tr")).ToList();
+        rows.RemoveAt(0);
+        
+        bool found = false;
+
+        foreach (var row in rows)
+        {
+            var locatedelement = row.FindElement(By.Id("IndexKindergartenName"));
+
+            if (locatedelement.Text == "Võilille lasteaed")
+            {
+                var rowElement = row.FindElement(By.Id("IndexActionKindergarten"));
+                var button = rowElement.FindElement(By.Id("IndexKindergartenDelete"));
+                button.Click();
+
+                found = true;
+                Thread.Sleep(3000);
+                break;
+            }
+        }
+        Assert.True(found, "Kindergarten was not found in the index table.");
+
+        var deleteButton = driver.FindElement(By.Id("Delete_Delete"));
+        deleteButton.Click();
+        
+        Thread.Sleep(3000);
+
+        var updatedTable = driver.FindElement(By.Id("IndexTable"));
+        List<IWebElement> updatedRows = updatedTable.FindElements(By.TagName("tr")).ToList();
+        updatedRows.RemoveAt(0);
+        
+        bool stillExists = false;
+        
+        foreach (var row in updatedRows)
+        {
+            var nameElement = row.FindElement(By.Id("IndexKindergartenName"));
+
+            if (nameElement.Text == "Võilille lasteaed")
+            {
+                stillExists = true;
+                break;
+            }
+        }
+        
+        Assert.False(stillExists, 
+            "Kindergarten 'Võilille lasteaed' was successfully deleted, but still appears in the table.");
+        
+        driver.Quit();
+    }
+
     private static IWebDriver SetupAndNavigateIndex()
     {
         var options = new FirefoxOptions();
