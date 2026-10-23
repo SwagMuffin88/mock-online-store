@@ -7,6 +7,37 @@ namespace FrontendTest;
 
 public class KindergartenTest
 {
+    [Fact]
+    public void Should_CreateKindergarten_And_ReturnToIndex_WhenDataIsValid()
+    {
+        IWebDriver driver = SetupAndNavigateIndex();
+        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+
+        IWebElement createInIndex = wait.Until(
+            ExpectedConditions.ElementToBeClickable(
+                By.Id("CreateInIndex"))
+        );
+        createInIndex.Click();
+        
+        InsertKindergartenData(driver);
+        
+        Thread.Sleep(3000);
+
+        IWebElement indexKindergartenName = driver.FindElement(By.Id("IndexKindergartenName"));
+        var kindergartenNameData = indexKindergartenName.Text;
+        
+        IWebElement indexGroupName = driver.FindElement(By.Id("IndexGroupName"));
+        var  groupNameData = indexGroupName.Text;
+        
+        IWebElement indexChildrenCount = driver.FindElement(By.Id("IndexChildrenCount"));
+        var childrenCountData = indexChildrenCount.Text;
+        
+        Assert.Equal("Päikesejänku lasteaed", kindergartenNameData);
+        Assert.Equal("Tibud", groupNameData);
+        Assert.Equal("12", childrenCountData);
+        
+        driver.Quit();
+    }
     
     
     private static IWebDriver SetupAndNavigateIndex()
@@ -25,7 +56,7 @@ public class KindergartenTest
     
     private void InsertKindergartenData(IWebDriver driver, bool isUpdate = false)
     {
-        string kindergartenName = isUpdate ? "Päikesejänku Lasteaed (Updated)" : "Päikesejänku Lasteaed";
+        string kindergartenName = isUpdate ? "Võilille lasteaed" : "Päikesejänku lasteaed";
         string groupName = isUpdate ? "Liblikad" : "Tibud";
         string childrenCount = isUpdate ? "15" : "12";
         string teacherName = isUpdate ? "Mari Maasikas" : "Kadri Kuusk";

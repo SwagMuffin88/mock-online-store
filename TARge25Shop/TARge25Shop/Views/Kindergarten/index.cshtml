@@ -5,7 +5,8 @@
     <h1>Kindergartens Index</h1>
     <a asp-action="Create"
        asp-controller="Kindergarten"
-       class="btn btn-primary">
+       class="btn btn-primary"
+       id="CreateInIndex">
         Create
     </a>
 </div>
@@ -31,9 +32,9 @@
             {
                 <tr>
                     <td>@(i++)</td>
-                    <td>@kindergarten.GroupName</td>
-                    <td>@kindergarten.ChildrenCount</td>
-                    <td>@kindergarten.KindergartenName</td>
+                    <td id="IndexGroupName">@kindergarten.GroupName</td>
+                    <td id="IndexChildrenCount">@kindergarten.ChildrenCount</td>
+                    <td id="IndexKindergartenName">@kindergarten.KindergartenName</td>
                     <td>@kindergarten.TeacherName</td>
                     <td>@kindergarten.CreatedAt</td>
                     <td>

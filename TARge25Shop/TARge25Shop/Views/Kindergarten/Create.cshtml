@@ -6,7 +6,8 @@
 <form method="post" enctype="multipart/form-data">
     <partial name="_KindergartenFormFields" model="Model"/>
 
-    <input asp-action="Create" asp-controller="kindergarten" type="submit" class="btn btn-primary" value="Create" />
+    <input asp-action="Create" asp-controller="kindergarten" type="submit" class="btn btn-primary" 
+           id="CU_CreateKindergarten" value="Create" />
     <a asp-action="Index" asp-controller="kindergarten" class="btn btn-secondary">Back to List</a>
 
 </form>
