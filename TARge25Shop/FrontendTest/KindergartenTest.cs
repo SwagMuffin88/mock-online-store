@@ -202,6 +202,33 @@ public class KindergartenTest
         driver.Quit();
     }
 
+    [Fact]
+    [Order(5)]
+    public void ShouldNot_CreateKindergarten_WhenRequiredFieldsAreEmpty()
+    {
+        var driver = SetupAndNavigateIndex();
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        
+        var createInIndex = wait.Until(
+            ExpectedConditions.ElementToBeClickable(By.Id("CreateInIndex"))
+        );
+        createInIndex.Click();
+        
+        var createButton = driver.FindElement(By.Id("CU_CreateKindergarten"));
+        createButton.Click();
+
+        Thread.Sleep(2000);
+        
+        driver.Navigate().GoToUrl("http://localhost:5277/Kindergarten");
+        
+        var table = driver.FindElement(By.Id("IndexTable"));
+        var rows = table.FindElements(By.TagName("tr")).ToList();
+        
+        Assert.True(rows.Count <= 2, "Validation failed: Empty kindergarten should not be created.");
+        
+        driver.Quit();
+    }
+    
     private static IWebDriver SetupAndNavigateIndex()
     {
         var options = new FirefoxOptions();
