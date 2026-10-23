@@ -97,6 +97,47 @@ public class KindergartenTest
         driver.Quit();
     }
 
+    [Fact]
+    public void Should_UpdateKindergartenDetails_WhenDataIsValid()
+    {
+        IWebDriver driver = SetupAndNavigateIndex();
+
+        var table = driver.FindElement(By.Id("IndexTable"));
+        List<IWebElement> rows = table.FindElements(By.TagName("tr")).ToList();
+        rows.RemoveAt(0);
+
+        foreach (var row in rows)
+        {
+            var locatedelement = row.FindElement(By.Id("IndexKindergartenName"));
+
+            if (locatedelement.Text == "Päikesejänku lasteaed")
+            {
+                var rowElement = row.FindElement(By.Id("IndexActionKindergarten"));
+                var button = rowElement.FindElement(By.Id("IndexKindergartenUpdate"));
+                
+                button.Click();
+                Thread.Sleep(3000);
+                break;
+            }
+        }
+        
+        InsertKindergartenData(driver, true);
+        Thread.Sleep(3000);
+
+        var detailsListContainer = driver.FindElement(By.Id("Details_List"));
+        
+        string updatedName = detailsListContainer.FindElement(By.Id("Details_KindergartenName")).Text;
+        string updatedGroupName = detailsListContainer.FindElement(By.Id("Details_KindergartenGroupName")).Text;
+        string updatedChildrenCount = detailsListContainer.FindElement(By.Id("Details_KindergartenChildrenCount")).Text;
+        string updatedTeacherName = detailsListContainer.FindElement(By.Id("Details_KindergartenTeacherName")).Text;
+        
+        Assert.Equal("Võilille lasteaed", updatedName);
+        Assert.Equal("Liblikad", updatedGroupName);
+        Assert.Equal("15", updatedChildrenCount);
+        Assert.Equal("Mari Maasikas", updatedTeacherName);
+    
+        driver.Quit();
+    }
 
     private static IWebDriver SetupAndNavigateIndex()
     {
