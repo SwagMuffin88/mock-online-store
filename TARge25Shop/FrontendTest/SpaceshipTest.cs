@@ -71,34 +71,34 @@ public class SpaceshipTest
                 found = true;
                 break;
             }
-
-            Assert.True(found, "Spaceship was not found in the table.");
-
-            Thread.Sleep(3000);
-
-            IWebElement details_SpaceshipId = driver.FindElement(By.Id("Details_SpaceshipId"));
-            var details_id = details_SpaceshipId.Text;
-
-            IWebElement details_SpaceshipName = driver.FindElement(By.Id("Details_SpaceshipName"));
-            var details_name = details_SpaceshipName.Text;
-
-            IWebElement details_SpaceshipType = driver.FindElement(By.Id("Details_SpaceshipType"));
-            var details_type = details_SpaceshipType.Text;
-
-            IWebElement details_SpaceshipCrew = driver.FindElement(By.Id("Details_SpaceshipCrew"));
-            var details_crew = details_SpaceshipCrew.Text;
-
-            IWebElement details_SpaceshipPower = driver.FindElement(By.Id("Details_SpaceshipPower"));
-            var details_power = details_SpaceshipPower.Text;
-
-            Assert.False(string.IsNullOrEmpty(details_id));
-            Assert.Equal("Apollo 11", details_name);
-            Assert.Equal("Command Module", details_type);
-            Assert.Equal("3", details_crew);
-            Assert.Equal("5000", details_power);
-
-            driver.Quit();
         }
+
+        Assert.True(found, "Spaceship was not found in the table.");
+
+        Thread.Sleep(3000);
+
+        IWebElement details_SpaceshipId = driver.FindElement(By.Id("Details_SpaceshipId"));
+        var details_id = details_SpaceshipId.Text;
+
+        IWebElement details_SpaceshipName = driver.FindElement(By.Id("Details_SpaceshipName"));
+        var details_name = details_SpaceshipName.Text;
+
+        IWebElement details_SpaceshipType = driver.FindElement(By.Id("Details_SpaceshipType"));
+        var details_type = details_SpaceshipType.Text;
+
+        IWebElement details_SpaceshipCrew = driver.FindElement(By.Id("Details_SpaceshipCrew"));
+        var details_crew = details_SpaceshipCrew.Text;
+
+        IWebElement details_SpaceshipPower = driver.FindElement(By.Id("Details_SpaceshipPower"));
+        var details_power = details_SpaceshipPower.Text;
+
+        Assert.False(string.IsNullOrEmpty(details_id));
+        Assert.Equal("Apollo 11", details_name);
+        Assert.Equal("Command Module", details_type);
+        Assert.Equal("3", details_crew);
+        Assert.Equal("5000", details_power);
+
+        driver.Quit();
     }
 
     [Fact]
