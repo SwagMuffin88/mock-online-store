@@ -105,6 +105,7 @@ public class SpaceshipTest
     [Order(3)]
     public void Should_UpdateDetails_OfASpaceShip_WithNewData()
     {
+        // TODO NB: controller now redirects to Details view, not Index. Test will fail.
         IWebDriver driver = SetupAndNavigateIndex();
 
         var table = driver.FindElement(By.Id("IndexTable"));
