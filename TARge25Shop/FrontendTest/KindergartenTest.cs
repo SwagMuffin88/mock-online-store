@@ -12,6 +12,8 @@ public class KindergartenTest
 {
     [Fact]
     [Order(1)]
+    /* Navigate from index to kindergarten creation page, insert valid data and submit. Confirm that the new
+     item exists in index table after redirecting. */
     public void Should_CreateKindergarten_And_ReturnToIndex_WhenDataIsValid()
     {
         var driver = SetupAndNavigateIndex();
@@ -45,6 +47,7 @@ public class KindergartenTest
 
     [Fact]
     [Order(2)]
+    /* Find a specific kindergarten item from index table, navigate to its details page, confirm the data on the page. */
     public void Should_NavigateToKindergartenDetails_WhenKindergartenExists()
     {
         var driver = SetupAndNavigateIndex();
@@ -104,6 +107,8 @@ public class KindergartenTest
 
     [Fact]
     [Order(3)]
+    /* Find a predefined existing test kindergarten item in the index table, navigate to the update view of that
+     specific item. Update existing item and verify changes in details view. */
     public void Should_UpdateKindergartenDetails_WhenDataIsValid()
     {
         IWebDriver driver = SetupAndNavigateIndex();
@@ -147,6 +152,7 @@ public class KindergartenTest
 
     [Fact]
     [Order(4)]
+    /* Delete a specific kindergarten item and confirm its deletion in index view after redirection. */
     public void Should_DeleteKindergarten_WhenKindergartenExists()
     {
         IWebDriver driver = SetupAndNavigateIndex();
@@ -204,6 +210,7 @@ public class KindergartenTest
 
     [Fact]
     [Order(5)]
+    /* Submit an empty kindergarten item and confirm its non-creation. */
     public void ShouldNot_CreateKindergarten_WhenRequiredFieldsAreEmpty()
     {
         var driver = SetupAndNavigateIndex();
@@ -231,6 +238,7 @@ public class KindergartenTest
 
     [Fact]
     [Order(6)]
+    /* Navigate to create page and navigate back to index view without submitting anything. */
     public void Should_NavigateBackToIndex_WhenCancelOrBackIsClicked()
     {
         var driver = SetupAndNavigateIndex();
@@ -253,6 +261,7 @@ public class KindergartenTest
 
     [Fact]
     [Order(7)]
+    /* Create two kindergarten items and confirm they both appear in the index table. */
     public void Should_CreateMultipleKindergartens_AndDisplayAllInIndexTable()
     {
         var driver = SetupAndNavigateIndex();
@@ -287,6 +296,8 @@ public class KindergartenTest
 
     [Fact]
     [Order(8)]
+    /* Create a test kindergarten and navigate to its delete page. Cancel deletion and confirm the kindergarten still
+     exists in index table. */
     public void Should_CancelDeletion_WhenDeleteConfirmationIsAborted()
     {
         var driver = SetupAndNavigateIndex();
