@@ -284,6 +284,44 @@ public class KindergartenTest
         Assert.Contains("Esimene lasteaed", pageSource);
         Assert.Contains("Teine lasteaed", pageSource);
     }
+
+    [Fact]
+    [Order(8)]
+    public void Should_CancelDeletion_WhenDeleteConfirmationIsAborted()
+    {
+        var driver = SetupAndNavigateIndex();
+        
+        driver.FindElement(By.Id("CreateInIndex")).Click();
+        InsertKindergartenData(driver, false);
+        
+        Thread.Sleep(2000);
+        
+        var table = driver.FindElement(By.Id("IndexTable"));
+        var rows = table.FindElements(By.TagName("tr")).ToList();
+        rows.RemoveAt(0);
+
+        foreach (var row in rows)
+        {
+            if (row.FindElement(By.Id("IndexKindergartenName")).Text == "Päikesejänku lasteaed")
+            {
+                row.FindElement(By.Id("IndexActionKindergarten"))
+                    .FindElement(By.Id("IndexKindergartenDelete"))
+                    .Click();
+                Thread.Sleep(2000);
+                break;
+            }
+        }
+
+        var cancelButton = driver.FindElement(By.Id("Delete_Back"));
+        cancelButton.Click();
+        Thread.Sleep(2000);
+
+        var updatedTable = driver.FindElement(By.Id("IndexTable"));
+
+        Assert.Contains("Päikesejänku lasteaed", updatedTable.Text);
+        
+        driver.Quit();
+    }
     
     private static IWebDriver SetupAndNavigateIndex()
     {
