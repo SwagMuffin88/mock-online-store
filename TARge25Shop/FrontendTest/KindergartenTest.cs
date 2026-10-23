@@ -5,9 +5,13 @@ using SeleniumExtras.WaitHelpers;
 
 namespace FrontendTest;
 
+[TestCaseOrderer(
+    ordererTypeName: "FrontendTest.PriorityOrderer",
+    ordererAssemblyName: "FrontendTest")]
 public class KindergartenTest
 {
     [Fact]
+    [Order(1)]
     public void Should_CreateKindergarten_And_ReturnToIndex_WhenDataIsValid()
     {
         var driver = SetupAndNavigateIndex();
@@ -40,6 +44,7 @@ public class KindergartenTest
     }
 
     [Fact]
+    [Order(2)]
     public void Should_NavigateToKindergartenDetails_WhenKindergartenExists()
     {
         var driver = SetupAndNavigateIndex();
@@ -98,6 +103,7 @@ public class KindergartenTest
     }
 
     [Fact]
+    [Order(3)]
     public void Should_UpdateKindergartenDetails_WhenDataIsValid()
     {
         IWebDriver driver = SetupAndNavigateIndex();
@@ -140,6 +146,7 @@ public class KindergartenTest
     }
 
     [Fact]
+    [Order(4)]
     public void Should_DeleteKindergarten_WhenKindergartenExists()
     {
         IWebDriver driver = SetupAndNavigateIndex();
