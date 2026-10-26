@@ -14,16 +14,17 @@
 <div>
     <h2>All spaceships</h2>
     <form method="get">
-        <table id="IndexTable" class="table table-hover">
+        <div class="table-responsive">
+        <table id="IndexTable" class="table table-hover align-middle">
             <thead>
-                <tr>
-                    <th id="IndexRowNumberColumn" scope="col">Nr</th>
-                    <th id="IndexNameColumn" scope="col">Name</th>
-                    <th id="IndexTypeColumn" scope="col">Type</th>
-                    <th id="IndexBuiltDateColumn" scope="col">Build date</th>
-                    <th id="IndexCrewColumn" scope="col">Crew</th>
-                    <th id="IndexActionsColumn" scope="col">Actions</th>
-                </tr>
+            <tr>
+                <th id="IndexRowNumberColumn" scope="col">Nr</th>
+                <th id="IndexNameColumn" scope="col">Name</th>
+                <th id="IndexTypeColumn" scope="col">Type</th>
+                <th id="IndexBuiltDateColumn" scope="col">Build date</th>
+                <th id="IndexCrewColumn" scope="col">Crew</th>
+                <th id="IndexActionsColumn" scope="col">Actions</th>
+            </tr>
             </thead>
             <tbody>
             @{ int i = 1; }
@@ -46,5 +47,6 @@
             </tbody>
 
         </table>
+        </div>
     </form>
 </div>

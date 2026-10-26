@@ -48,12 +48,25 @@ footer.footer{
 
 .main-card {
     width: 100%;
-    max-width: 1100px;
+    max-width: 1300px;
     background: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(10px);
     border-radius: 1rem;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
     border: none;
+}
+
+.card h1 {
+    margin-bottom: 1rem !important;
+}
+
+.card h3 {
+    margin-top: 1.5rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.card p {
+    margin-bottom: 1.5rem !important;
 }
 
 @-moz-document url-prefix() {
@@ -110,4 +123,28 @@ footer.footer{
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
+}
+
+.card .table,
+.card .table-responsive,
+.card .table thead,
+.card .table tbody,
+.card .table tr,
+.card .table th,
+.card .table td {
+    background-color: transparent !important;
+    background: transparent !important;
+}
+
+.card .table {
+    border-color: transparent !important;
+}
+
+.card .table tbody tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.card .table > :not(caption) > * > * {
+    padding: 1rem 1rem !important;
+    vertical-align: middle;
 }
