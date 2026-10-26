@@ -26,6 +26,18 @@ body {
     background-attachment: fixed;
 }
 
+header .navbar{
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+footer.footer{
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
 .content-wrapper {
     min-height: 85vh;
     display: flex;
@@ -37,7 +49,7 @@ body {
 .main-card {
     width: 100%;
     max-width: 1100px;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(10px);
     border-radius: 1rem;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
