@@ -1,17 +1,16 @@
 @model IEnumerable<TARge25Shop.Models.RealEstate.RealEstateIndexViewModel>
 
-<div>
-    <a asp-action="create" asp-controller="realEstate" type="submit" class="btn btn-primary">Create</a>
-</div>
-
 @{
     short rowNumber = 1;
 }
 
-
 <div class="h1">
-    Real estate
+    Real estate index
 </div>
+
+<a asp-action="create" asp-controller="realEstate" type="submit" class="btn btn-primary mb-3">Create</a>
+
+
 <form method="get">
     <table class="table table-hover">
         <thead>

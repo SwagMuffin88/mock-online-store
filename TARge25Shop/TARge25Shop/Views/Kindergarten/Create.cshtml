@@ -1,14 +1,18 @@
 @model TARge25Shop.Models.Kindergarten.KindergartenCreateViewModel
 
-<div>
+<h1>
     Create new Kindergarten
-</div>
+</h1>
 <form method="post" enctype="multipart/form-data">
     <partial name="_KindergartenFormFields" model="Model"/>
 
-    <input asp-action="Create" asp-controller="kindergarten" type="submit" class="btn btn-primary" 
-           id="CU_CreateKindergarten" value="Create" />
-    <a asp-action="Index" asp-controller="kindergarten" class="btn btn-secondary"
-       id="CU_Back">Back to List</a>
+    <div class="form-group row mt-4">
+        <div class="d-flex gap-3">
+            <input asp-action="Create" asp-controller="kindergarten" type="submit" class="btn btn-primary" 
+                   id="CU_CreateKindergarten" value="Create" />
+            <a asp-action="Index" asp-controller="kindergarten" class="btn btn-secondary"
+               id="CU_Back">Back to List</a>
+        </div>
+    </div>
 
 </form>

@@ -3,13 +3,13 @@
 @if (Model.Id.HasValue)
 {
     <h1>
-        Update
+        Update real estate
     </h1>
 }
 else
 {
     <h1>
-        Create
+        Create real estate
     </h1>
 }
 
@@ -19,7 +19,7 @@ else
     <input asp-for="ModifiedAt" type="hidden" />
 
     <div class="form-group row">
-        <label asp-for="AreaCode" class="col-sm-2 col-form-label"></label>
+        <label asp-for="AreaCode" class="col-sm-2 col-form-label">Area code</label>
         <div class="col-sm-10">
             <input asp-for="AreaCode" class="form-control" />
         </div>
@@ -33,14 +33,14 @@ else
     </div>
 
     <div class="form-group row">
-        <label asp-for="NrOfRooms" class="col-sm-2 col-form-label"></label>
+        <label asp-for="NrOfRooms" class="col-sm-2 col-form-label">Nr of rooms</label>
         <div class="col-sm-10">
             <input asp-for="NrOfRooms" class="form-control" />
         </div>
     </div>
 
     <div class="form-group row">
-        <label asp-for="BuildingType" class="col-sm-2 col-form-label"></label>
+        <label asp-for="BuildingType" class="col-sm-2 col-form-label">Building type</label>
         <div class="col-sm-10">
             <input asp-for="BuildingType" class="form-control" />
         </div>

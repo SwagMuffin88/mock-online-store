@@ -5,6 +5,11 @@
 <form asp-action="Create" method="post" enctype="multipart/form-data">
     <partial name="_SpaceshipFormFields" model="Model" />
     
-    <input type="submit" class="btn btn-success" value="Create" id="CU_CreateSpaceship"/>
-    <a asp-action="Index" class="btn btn-secondary" id="CU_Back">Back to List</a>
+    <div class="form-group row mt-4">
+        <div class="d-flex gap-3">
+            <input type="submit" class="btn btn-success" value="Create" id="CU_CreateSpaceship"/>
+            <a asp-action="Index" class="btn btn-secondary" id="CU_Back">Back to List</a>
+        </div>
+    </div>
+    
 </form>
