@@ -1,0 +1,129 @@
+@model TARge25Shop.Models.Weather.WeatherViewModel
+
+@{
+    ViewData["Title"] = "Ilmateade";
+
+    var backgroundClass = "default-weather";
+
+    if (Model != null && !string.IsNullOrEmpty(Model.Description))
+    {
+        var desc = Model.Description.ToLower();
+        if (desc.Contains("vihm") || desc.Contains("sadu") || desc.Contains("äike") || desc.Contains("jäide"))
+        {
+            backgroundClass = "rainy-weather";
+        }
+        else if (desc.Contains("lumi") || desc.Contains("lörts"))
+        {
+            backgroundClass = "snowy-weather";
+        }
+        else if (desc.Contains("päike") || desc.Contains("selge"))
+        {
+            backgroundClass = "sunny-weather";
+        }
+        else if (desc.Contains("pilv") || desc.Contains("udu") || desc.Contains("vine"))
+        {
+            backgroundClass = "cloudy-weather";
+        }
+    }
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h2 class="text-dark mb-4 fw-bold">Maailma linnade ilmateade</h2>
+
+            <form method="get" asp-action="Index" class="row justify-content-center g-3 mt-3">
+                <div class="col-auto" style="margin-bottom: 10px">
+                    <label for="SelectedCity" class="col-form-label">Vali linn:</label>
+                </div>
+
+                <div class="col-auto">
+                    <select asp-for="SelectedCity"
+                            asp-items="@(new SelectList(Model.AvailableCities, Model.SelectedCity))"
+                            class="form-select" onchange="this.form.submit()">
+                    </select>
+                </div>
+            </form>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger mt-3">Valitud linna andmeid ei leitud.</div>
+            }
+
+            @if (ViewData.ModelState.IsValid && !string.IsNullOrEmpty(Model.CityName))
+            {
+                <div id="weatherCardElement" class="card weather-card mx-auto mt-4 shadow-lg" style="max-width: 550px;">
+                    <div class="weather-glass-overlay">
+                        <h2 class="card-title display-5 fw-bold mb-3">@Model.CityName</h2>
+                        <div class="display-1 fw-bold my-4 text-primary">@Math.Round(Model.Temperature) °C</div>
+                        <h4 class="card-subtitle text-capitalize mb-4 fs-3">@Model.Description</h4>
+                        <hr class="border-dark opacity-25 my-4">
+                        <div class="fs-5">
+                            <i class="bi bi-droplet-fill"></i> Õhuniiskus: <span class="fw-bold">@Model.Humidity%</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .weather-card {
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            border-radius: 24px !important;
+            border: 1px solid rgba(255, 255, 255, 0.6) !important;
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            transition: background-image 0.5s ease-in-out;
+        }
+
+        .weather-glass-overlay {
+            background: rgba(255, 255, 255, 0.5);
+            -webkit-backdrop-filter: blur(10px);
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            color: #212529 !important;
+        }
+
+        .weather-card.default-weather {
+            background-image: url("images/default.png");
+        }
+
+        .weather-card.sunny-weather {
+            background-image: url("images/sunny.jpg");
+        }
+
+        .weather-card.rainy-weather {
+            background-image: url("images/rainy.jpg");
+        }
+
+        .weather-card.cloudy-weather {
+            background-image: url("images/cloudy.jpg");
+        }
+
+        .weather-card.snowy-weather {
+            background-image: url("images/snowy.png");
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const weatherCard = document.getElementById("weatherCardElement");
+            if (weatherCard) {
+                weatherCard.classList.add("@backgroundClass");
+            }
+        });
+    </script>
+}
