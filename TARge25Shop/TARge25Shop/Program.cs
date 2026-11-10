@@ -29,6 +29,7 @@ namespace TARge25Shop
             builder.Services.AddScoped<IChuckNorrisServices, ChuckNorrisServices>();
             builder.Services.AddScoped<ICocktailServices, CocktailServices>();
             builder.Services.AddScoped<IWeatherService, WeatherService>();
+            builder.Services.AddScoped<IEmailServices, EmailServices>();
             
             builder.Services.AddDbContext<TARge25ShopContext>(options =>
                 options.UseSqlite(

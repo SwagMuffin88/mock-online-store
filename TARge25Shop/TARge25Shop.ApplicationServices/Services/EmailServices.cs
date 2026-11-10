@@ -13,38 +13,51 @@ public class EmailServices : IEmailServices
 
     private readonly IConfiguration _config;
 
-    private EmailServices(IConfiguration config)
+    public EmailServices(IConfiguration config)
     {
         _config = config;
     }
     
     public void SendEmail(EmailDto dto)
     {
-        var from = MailboxAddress.Parse(_config.GetSection("EmailSettings.SenderName").Value);
-        var to =  new MailboxAddress(
-            SplitEmail(dto.To),
-            dto.To);
+        var senderName = _config["EmailSettings:SenderName"] ?? "TARge25Shop";
+        var server = _config["EmailSettings:Server"];
+        var emailUser = _config["EmailSettings:Email"];
+        var password = _config["EmailSettings:Password"];
+        
+        if (string.IsNullOrEmpty(emailUser))
+        {
+            throw new Exception("Could not get sender value from configuration");
+        }
+
+        if (string.IsNullOrEmpty(dto.To))
+        {
+            throw new Exception("Recipient value cannot be empty");
+        }
+        
+        var from = new MailboxAddress(senderName, emailUser);
+        var to =  new MailboxAddress(SplitEmail(dto.To), dto.To);
         
         var email = new MimeMessage();
         
         email.From.Add(from);
         email.To.Add(to);
+        email.Subject = dto.Subject;
 
         var builder = new BodyBuilder
         {
             HtmlBody = dto.Body
         };
 
-        foreach (var file in dto.Attachments)
+        if (dto.Attachments != null) 
         {
-            if (file.Length > 0 && file.Length < 10485760)
+            foreach (var file in dto.Attachments)
             {
-                using (var stream = new MemoryStream())
-                {
-                    file.CopyTo(stream);
-                    stream.Position = 0; // Resets the stream position to the beginning
-                    builder.Attachments.Add(file.FileName,  stream.ToArray());
-                }
+                    using (var stream = new MemoryStream())
+                    {
+                        stream.Position = 0; // Resets the stream position to the beginning
+                        builder.Attachments.Add(file.FileName,  stream.ToArray());
+                    }
             }
         }
         
@@ -52,13 +65,13 @@ public class EmailServices : IEmailServices
 
         using var smtp = new SmtpClient();
         
-        smtp.Connect(_config.GetSection("EmailSettings.Server").Value,  
+        smtp.Connect(server,  
             587,
             MailKit.Security.SecureSocketOptions.StartTls
         );
         
-        smtp.Authenticate(_config.GetSection("EmailSettings.Email").Value,
-            _config.GetSection("EmailSettings.Password").Value);
+        smtp.Authenticate(emailUser,
+            password);
         
         smtp.Send(email);
         smtp.Disconnect(true);
