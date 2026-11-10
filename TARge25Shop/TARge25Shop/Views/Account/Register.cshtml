@@ -1,0 +1,50 @@
+@model TARge25Shop.Models.Account.RegisterViewModel
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Create account</title>
+</head>
+<body>
+<div>
+    <h1>
+        Create a new account
+    </h1>
+    <div>
+        <div class="form-group">
+            <label asp-for="Email">Email:</label>
+            <input asp-for="Email" class="form-control"/>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        
+        <div class="form-group">
+            <label asp-for="Name">Username:</label>
+            <input asp-for="Name" class="form-control"/>
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        
+        <div class="form-group">
+            <label asp-for="Password">Password:</label>
+            <input asp-for="Password" class="form-control"/>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        
+        <div class="form-group">
+            <label asp-for="ConfirmPassword">ConfirmPassword</label>
+            <input asp-for="ConfirmPassword" class="form-control"/>
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+        
+        <div class="form-group">
+            <label asp-for="City">City</label>
+            <input asp-for="City" class="form-control"/>
+            <span asp-validation-for="City" class="text-danger"></span>
+        </div>
+    </div>
+    
+    <button>
+        
+    </button>
+</div>
+</body>
+</html>

@@ -77,6 +77,11 @@ public class EmailServices : IEmailServices
         smtp.Disconnect(true);
     }
 
+    public void SendEmailToken(EmailTokenDto dto, string token)
+    {
+        dto.Token =  token;
+    }
+
     private string SplitEmail(string email)
     {
         int atSymbolIndex = email.IndexOf('@');
