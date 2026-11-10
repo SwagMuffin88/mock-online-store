@@ -3,6 +3,7 @@ using TARge25Shop.Core;
 using TARge25Shop.Data;
 using Microsoft.EntityFrameworkCore;
 using TARge25Shop.ApplicationServices;
+using TARge25Shop.ApplicationServices.Customs;
 using TARge25Shop.Core.ServiceInterface;
 
 namespace TARge25Shop
@@ -15,7 +16,9 @@ namespace TARge25Shop
             // MVC pattern: https://learn.microsoft.com/en-us/aspnet/core/mvc/overview?view=aspnetcore-10.0
             
             var builder = WebApplication.CreateBuilder(args);
-
+            
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+            
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             
@@ -69,12 +72,6 @@ namespace TARge25Shop
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
-            
-            // app.MapGet("/norris-joke", async (ChuckNorrisServices service) =>
-            // {
-            //     var joke = await service.ChuckNorrisResultHttpClient();
-            //     return Results.Ok(joke);
-            // });
 
             app.Run();
         }

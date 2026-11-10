@@ -1,5 +1,8 @@
+using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using MimeKit;
+using TARge25Shop.ApplicationServices.Customs;
 using TARge25Shop.Core.Dto.email;
 using TARge25Shop.Core.ServiceInterface;
 
@@ -9,10 +12,15 @@ public class EmailServices : IEmailServices
 {
 
     private readonly IConfiguration _config;
+    private readonly EmailSettings _emailSettings;
+    private readonly SmtpClient _smtpClient;
 
-    private EmailServices(IConfiguration config)
+    private EmailServices(IConfiguration config, IOptions<EmailSettings> emailSettings)
     {
         _config = config;
+        _emailSettings =  emailSettings.Value;
+        
+        
     }
     
     public void SendEmail(EmailDto dto)
