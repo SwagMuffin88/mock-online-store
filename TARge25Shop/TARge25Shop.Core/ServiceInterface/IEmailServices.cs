@@ -4,5 +4,5 @@ namespace TARge25Shop.Core.ServiceInterface;
 
 public interface IEmailServices
 {
-    public void SendEmail(EmailDto dto);
+    void SendEmail(EmailDto dto);
 }

@@ -12,20 +12,15 @@ public class EmailServices : IEmailServices
 {
 
     private readonly IConfiguration _config;
-    private readonly EmailSettings _emailSettings;
-    private readonly SmtpClient _smtpClient;
 
-    private EmailServices(IConfiguration config, IOptions<EmailSettings> emailSettings)
+    private EmailServices(IConfiguration config)
     {
         _config = config;
-        _emailSettings =  emailSettings.Value;
-        
-        
     }
     
     public void SendEmail(EmailDto dto)
     {
-        var from = MailboxAddress.Parse(_config.GetSection("EmailUserName").Value);
+        var from = MailboxAddress.Parse(_config.GetSection("EmailSettings.SenderName").Value);
         var to =  new MailboxAddress(
             SplitEmail(dto.To),
             dto.To);
@@ -34,6 +29,39 @@ public class EmailServices : IEmailServices
         
         email.From.Add(from);
         email.To.Add(to);
+
+        var builder = new BodyBuilder
+        {
+            HtmlBody = dto.Body
+        };
+
+        foreach (var file in dto.Attachments)
+        {
+            if (file.Length > 0 && file.Length < 10485760)
+            {
+                using (var stream = new MemoryStream())
+                {
+                    file.CopyTo(stream);
+                    stream.Position = 0; // Resets the stream position to the beginning
+                    builder.Attachments.Add(file.FileName,  stream.ToArray());
+                }
+            }
+        }
+        
+        email.Body = builder.ToMessageBody();
+
+        using var smtp = new SmtpClient();
+        
+        smtp.Connect(_config.GetSection("EmailSettings.Server").Value,  
+            587,
+            MailKit.Security.SecureSocketOptions.StartTls
+        );
+        
+        smtp.Authenticate(_config.GetSection("EmailSettings.Email").Value,
+            _config.GetSection("EmailSettings.Password").Value);
+        
+        smtp.Send(email);
+        smtp.Disconnect(true);
     }
 
     private string SplitEmail(string email)
