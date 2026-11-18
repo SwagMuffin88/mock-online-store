@@ -1,8 +1,6 @@
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using MimeKit;
-using TARge25Shop.ApplicationServices.Customs;
 using TARge25Shop.Core.Dto.email;
 using TARge25Shop.Core.ServiceInterface;
 
@@ -80,6 +78,7 @@ public class EmailServices : IEmailServices
     public void SendEmailToken(EmailTokenDto dto, string token)
     {
         dto.Token =  token;
+        // Todo finish
     }
 
     private string SplitEmail(string email)

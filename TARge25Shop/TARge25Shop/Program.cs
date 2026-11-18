@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Identity;
 using TARge25Shop.ApplicationServices.Services;
 using TARge25Shop.Core;
 using TARge25Shop.Data;
 using Microsoft.EntityFrameworkCore;
 using TARge25Shop.ApplicationServices;
 using TARge25Shop.ApplicationServices.Customs;
+using TARge25Shop.Core.Dto.account;
 using TARge25Shop.Core.ServiceInterface;
 
 namespace TARge25Shop
@@ -35,6 +37,10 @@ namespace TARge25Shop
                 options.UseSqlite(
                     builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<TARge25ShopContext>()
+                .AddDefaultTokenProviders();
+            
             builder.Services.AddHttpClient("ChuckNorrisJokesApi", client =>
             {
                 client.BaseAddress = new Uri("https://api.chucknorris.io/");

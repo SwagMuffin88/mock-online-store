@@ -21,6 +21,7 @@
        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.12" />
        <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.12" />
        <PackageReference Include="SQLite" Version="3.54.0" />
+       <PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0" />
         <ProjectReference Include="..\TARge25Shop.Core\TARge25Shop.Core.csproj" />
     </ItemGroup>
 

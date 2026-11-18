@@ -96,4 +96,34 @@ public class AccountController : Controller
         }
         return View(model);
     }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<IActionResult> ConfirmEmail(string userId, string token)
+    {
+        if (userId == null || token == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null)
+        {
+            ViewBag.ErrorMessage = $"The user with id of {userId} is not valid";
+            return View("NotFound");
+        }
+
+        var result = await _userManager.ConfirmEmailAsync(user, token);
+        List<string> errorData =
+            [
+                "Area", "Account",
+                "Issue", "Success",
+                "StatusMessage", "Registration Success",
+                "ActedOn", $"{user.Email}",
+                "CreatedAccountData", $"{user.Email}\n{user.City}\n[password hidden]"
+            ];
+
+        return null;
+    }
 }
