@@ -36,6 +36,10 @@ namespace TARge25Shop
             builder.Services.AddDbContext<TARge25ShopContext>(options =>
                 options.UseSqlite(
                     builder.Configuration.GetConnectionString("DefaultConnection")));
+            
+            builder.Services.AddDbContext<ApplicationIdentityDbContext>(options =>
+                options.UseSqlite(
+                    builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                     {
