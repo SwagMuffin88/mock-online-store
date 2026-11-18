@@ -37,9 +37,16 @@ namespace TARge25Shop
                 options.UseSqlite(
                     builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<TARge25ShopContext>()
-                .AddDefaultTokenProviders();
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+                    {
+                        options.SignIn.RequireConfirmedAccount = true;
+                        options.Password.RequiredLength = 5;
+                        options.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
+                        options.Lockout.MaxFailedAccessAttempts = 3;
+                        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+                    })
+                .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
+                .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>("CustomEmailConfirmation");
             
             builder.Services.AddHttpClient("ChuckNorrisJokesApi", client =>
             {
