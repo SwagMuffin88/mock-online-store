@@ -1,9 +1,11 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TARge25Shop.ApplicationServices.Services;
 using TARge25Shop.Core.Dto.account;
 using TARge25Shop.Core.Dto.email;
+using TARge25Shop.Models;
 using TARge25Shop.Models.Account;
 
 namespace TARge25Shop.Controllers;
@@ -123,7 +125,25 @@ public class AccountController : Controller
                 "ActedOn", $"{user.Email}",
                 "CreatedAccountData", $"{user.Email}\n{user.City}\n[password hidden]"
             ];
+        
+        if (result.Succeeded)
+        {
+            errorData =
+            [
+                "Area", "Account",
+                "Issue", "Success",
+                "StatusMessage", "Registration Success",
+                "ActedOn", $"{user.Email}",
+                "CreatedAccountData", $"{user.Email}\n{user.City}\n[password hidden]"
+            ];
+            ViewBag.ErrorMessage = errorData;
+            return View();
+        }
 
-        return null;
+        ViewBag.ErrorMessage = errorData;
+        ViewBag.ErrorTitles = "Email cannot be confirmed";
+        ViewBag.ErrorMessage = $"The user email, with userid of {userId}, cannot be confirmed";
+
+        return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
     }
 }
