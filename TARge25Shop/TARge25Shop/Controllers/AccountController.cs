@@ -93,7 +93,7 @@ public class AccountController : Controller
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.Print(e.Message);
+               Debug.Print(e.Message);
             }
         }
         return View(model);
@@ -156,20 +156,20 @@ public class AccountController : Controller
 
     [HttpPost]
     [AllowAnonymous]
-    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl)
+    public async Task<IActionResult> Login(LoginViewModel viewModel, string? returnUrl)
     {
         if (ModelState.IsValid)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.FindByEmailAsync(viewModel.Email);
 
             if (user != null && !user.EmailConfirmed &&
-                (await _userManager.CheckPasswordAsync(user, model.Password)))
+                (await _userManager.CheckPasswordAsync(user, viewModel.Password)))
             {
                 ModelState.AddModelError(string.Empty, "Email not confirmed yet");
-                return View(model);
+                return View(viewModel);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, true);
+            var result = await _signInManager.PasswordSignInAsync(viewModel.Email, viewModel.Password, viewModel.RememberMe, true);
                 
             if(result.Succeeded)
             {
@@ -177,10 +177,8 @@ public class AccountController : Controller
                 {
                     return Redirect(returnUrl);
                 }
-                else
-                {
-                    return RedirectToAction("Index", "Home");
-                }
+                
+                return RedirectToAction("Index", "Home");
             }
 
             if (result.IsLockedOut)
@@ -191,7 +189,7 @@ public class AccountController : Controller
             ModelState.AddModelError("", "Invalid login Attempt");
         }
 
-        return View(model);
+        return View(viewModel);
     }
     
     [HttpGet]
@@ -203,31 +201,30 @@ public class AccountController : Controller
 
     [HttpPost]
     [AllowAnonymous]
-    public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel viewModel)
     {
         if (ModelState.IsValid)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.FindByEmailAsync(viewModel.Email);
             if (user != null && await _userManager.IsEmailConfirmedAsync(user))
             {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 
-                var passwordResetLink = Url.Action("ResetPassword", "Account", new { email = model.Email, token = token }, Request.Scheme);
+                var passwordResetLink = Url.Action("ResetPassword", "Account", new { email = viewModel.Email, token = token }, Request.Scheme);
 
                 var emailDto = new EmailDto
                 {
-                    To = model.Email,
+                    To = viewModel.Email,
                     Subject = "reset your password",
                     Body = $"Please reset your password by clicking <a href='{passwordResetLink}'>here</a>"
                 };
 
                 _emailServices.SendEmail(emailDto);
-
+                
                 return View("ForgotPasswordConfirmation");
             }
-            return View("ForgotPasswordConfirmation");
         }
-        return View(model);
+        return View(viewModel);
     }
         
     [HttpGet]
@@ -237,7 +234,7 @@ public class AccountController : Controller
     {
         if (token == null || email == null)
         {
-            ModelState.AddModelError("", "Invalid password reset token");
+            ModelState.AddModelError("", "Could not initiate password reset");
         }
 
         return View();
@@ -245,10 +242,41 @@ public class AccountController : Controller
 
     [HttpPost]
     [AllowAnonymous]
-    public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+    public async Task<IActionResult> ResetPassword(ResetPasswordViewModel viewModel)
     {
+        if (!ModelState.IsValid)
+        {
+            return View(viewModel);
+        }
 
-        return View(model);
+        var user = await _userManager.FindByEmailAsync(viewModel.Email);
+
+        // Ära reeda, kas sellise emailiga kasutaja on olemas
+        if (user == null)
+        {
+            return View("ResetPasswordConfirmation");
+        }
+
+        var result = await _userManager.ResetPasswordAsync(user, viewModel.Token, viewModel.Password);
+
+        if (result.Succeeded)
+        {
+            //SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow) töötab,
+            // kuid null väärtus eemaldab lukustuse täielikult (LockoutEnd = null).
+            if (await _userManager.IsLockedOutAsync(user)) 
+                //await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow);
+                await _userManager.SetLockoutEndDateAsync(user, null);
+            
+            return View("ResetPasswordConfirmation");
+        }
+
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError("", error.Description);
+        }
+
+        return View(viewModel);
     }
+    
     
 }
