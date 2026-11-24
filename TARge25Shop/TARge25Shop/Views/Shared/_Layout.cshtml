@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<TARge25Shop.Core.Domain.Account.ApplicationUser> signInManager
+@inject UserManager<TARge25Shop.Core.Domain.Account.ApplicationUser> userManager
+@{
+    var user = await userManager.GetUserAsync(User);
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -43,44 +50,58 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
-                    @* <li class="nav-item"> *@
-                    @*     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> *@
-                    @* </li> *@
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Spaceship" asp-action="Index">Spaceship</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Kindergarten"
-                           asp-action="Index">Kindergarten</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="RealEstate" asp-action="Index">Real estate</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="ChuckNorris" asp-action="Index">Chuck Norris Jokes</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Cocktail" asp-action="Index">Cocktails</a>
-                    </li>
                     
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Weather" asp-action="Index">Weather</a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Email" asp-action="Index">Email SMTP</a>
-                    </li>
-                    
+                    @if (signInManager.IsSignedIn(User))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Spaceship" asp-action="Index">Spaceship</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Kindergarten"
+                               asp-action="Index">Kindergarten</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="RealEstate" asp-action="Index">Real estate</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="ChuckNorris" asp-action="Index">Chuck Norris Jokes</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Cocktail" asp-action="Index">Cocktails</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Weather" asp-action="Index">Weather</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Email" asp-action="Index">Email SMTP</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="ChangePassword">
+                                Change password
+                            </a>
+                        </li>
+                        <li>
+                            <form method="post" asp-area="" asp-controller="Account" asp-action="Logout">
+                                <button>
+                                    Logout @user.Name
+                                </button>
+                            </form>
+                        </li>
+                    }
+
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Registration</a>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
                     </li>
+                    
                 </ul>
             </div>
         </div>

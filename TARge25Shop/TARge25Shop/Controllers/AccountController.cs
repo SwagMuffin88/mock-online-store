@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TARge25Shop.ApplicationServices.Services;
-using TARge25Shop.Core.Dto.account;
+using TARge25Shop.Core.Domain.Account;
 using TARge25Shop.Core.Dto.email;
+using TARge25Shop.Core.ServiceInterface;
 using TARge25Shop.Models;
 using TARge25Shop.Models.Account;
 
@@ -15,10 +16,10 @@ public class AccountController : Controller
     private readonly ILogger<AccountController> _logger;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly EmailServices _emailServices;
+    private readonly IEmailServices _emailServices;
 
     public AccountController(ILogger<AccountController> logger, UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager, EmailServices emailServices)
+        SignInManager<ApplicationUser> signInManager, IEmailServices emailServices)
     {
         _logger = logger;
         _userManager = userManager;
@@ -35,75 +36,74 @@ public class AccountController : Controller
 
     [HttpPost]
     [AllowAnonymous]
-    public async Task<IActionResult> Register(RegisterViewModel model)
+    public async Task<IActionResult> Register(RegisterViewModel viewModel)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
+            return View(viewModel);
+        
+        var user = new ApplicationUser
         {
-            try
+            UserName = viewModel.Name,
+            Name =  viewModel.Name,
+            Email = viewModel.Email,
+            City = viewModel.City
+        };
+
+        var result = await _userManager.CreateAsync(user, viewModel.Password);
+
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
             {
-                var user = new ApplicationUser
-                {
-                    UserName = model.Name,
-                    Name =  model.Name,
-                    Email = model.Email,
-                    City = model.City
-                };
-
-                var result = await _userManager.CreateAsync(user, model.Password);
-
-                if (result.Succeeded)
-                {
-                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    
-                    var confirmationLink = Url.Action(
-                        "ConfirmEmail", 
-                        "Account", 
-                        new { userId = user.Id, token = token }, 
-                        Request.Scheme);
-
-                    EmailTokenDto newsignup = new EmailTokenDto
-                    {
-                        Token = token,
-                        Body = $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>Confirm Email</a>",
-                        Subject = "SHOP Confirm your email",
-                        To = user.Email
-                    };
-
-                    _emailServices.SendEmailToken(newsignup, token);
-
-                    List<string> errorDataList =
-                    [
-                        "Area", "Accounts",
-                        "Issue", "Success",
-                        "StatusMessage", "Registration success",
-                        "ActedOn", $"{model.Email}",
-                        "CreatedAccountData", $"{model.Email}\n{model.City}\n[Password hidden]\n[Password hidden]"
-                    ];
-                    ViewBag.ErrorData = errorDataList;
-                    ViewBag.ErrorTitle = "Registration success";
-                    ViewBag.ErrorMessage = "Check your email to confirm your account.";
-                    
-                    return View("ConfirmationEmailMessage");
-                }
-
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.Description);
-                }
+                ModelState.AddModelError(string.Empty, error.Description);
             }
-            catch (Exception e)
-            {
-               Debug.Print(e.Message);
-            }
+
+            return View(viewModel);
         }
-        return View(model);
+
+        try {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            
+            var confirmationLink = Url.Action(
+                "ConfirmEmail", 
+                "Account", 
+                new { userId = user.Id, token = token }, 
+                Request.Scheme);
+            
+            if (string.IsNullOrWhiteSpace(confirmationLink))
+            {
+                throw new InvalidOperationException("Could not generate confirmation link.");
+            }
+            
+            var newSignup = new EmailTokenDto
+            {
+                Token = token,
+                Body = $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>Confirm Email</a>",
+                Subject = "Confirm your email",
+                To = user.Email
+            };
+
+            _emailServices.SendEmailToken(newSignup, token);
+            
+            ViewBag.StatusTitle = "Registration success";
+            ViewBag.StatusMessage = "Check your email to confirm your account.";
+            
+            return View("ConfirmationEmailMessage");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Could not send confirmation link to email {Email}", user.Email);
+            ModelState.AddModelError(
+                string.Empty, "Account created, but there was a problem sending the confirmation link. Try again later.");
+            return View(viewModel);
+        }
     }
 
     [HttpGet]
     [AllowAnonymous]
     public async Task<IActionResult> ConfirmEmail(string userId, string token)
     {
-        if (userId == null || token == null)
+        if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(token))
         {
             return RedirectToAction("Index", "Home");
         }
@@ -112,39 +112,27 @@ public class AccountController : Controller
 
         if (user == null)
         {
-            ViewBag.ErrorMessage = $"The user with id of {userId} is not valid";
+            ViewBag.ErrorTitle = "User not found";
+            ViewBag.ErrorMessage = "The specified user account does not exist.";
             return View("NotFound");
         }
 
         var result = await _userManager.ConfirmEmailAsync(user, token);
-        List<string> errorData =
-            [
-                "Area", "Account",
-                "Issue", "Success",
-                "StatusMessage", "Registration Success",
-                "ActedOn", $"{user.Email}",
-                "CreatedAccountData", $"{user.Email}\n{user.City}\n[password hidden]"
-            ];
         
         if (result.Succeeded)
         {
-            errorData =
-            [
-                "Area", "Account",
-                "Issue", "Success",
-                "StatusMessage", "Registration Success",
-                "ActedOn", $"{user.Email}",
-                "CreatedAccountData", $"{user.Email}\n{user.City}\n[password hidden]"
-            ];
-            ViewBag.ErrorMessage = errorData;
+            ViewBag.StatusTitle = "Email confirmed";
+            ViewBag.StatusMessage = "Your email has been confirmed. You can now log in.";
             return View();
         }
+        
+        ViewBag.ErrorTitle = "Email cannot be confirmed";
+        ViewBag.ErrorMessage = "The email confirmation link is invalid or has expired.";
 
-        ViewBag.ErrorMessage = errorData;
-        ViewBag.ErrorTitles = "Email cannot be confirmed";
-        ViewBag.ErrorMessage = $"The user email, with userid of {userId}, cannot be confirmed";
-
-        return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
+        return View("Error", new ErrorViewModel
+        {
+            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+        });
     }
     
     [HttpGet]
@@ -245,17 +233,13 @@ public class AccountController : Controller
     public async Task<IActionResult> ResetPassword(ResetPasswordViewModel viewModel)
     {
         if (!ModelState.IsValid)
-        {
             return View(viewModel);
-        }
 
         var user = await _userManager.FindByEmailAsync(viewModel.Email);
 
         // Ära reeda, kas sellise emailiga kasutaja on olemas
         if (user == null)
-        {
             return View("ResetPasswordConfirmation");
-        }
 
         var result = await _userManager.ResetPasswordAsync(user, viewModel.Token, viewModel.Password);
 
@@ -277,6 +261,49 @@ public class AccountController : Controller
 
         return View(viewModel);
     }
-    
-    
+
+    [HttpGet]
+    public IActionResult ChangePassword(string email, string token)
+    {
+        if (token == null || email == null)
+        {
+            ModelState.AddModelError("", "Could not initiate password reset");
+        }
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ChangePassword(ChangePasswordViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+            return View(viewModel);
+        
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null)
+            return RedirectToAction("Login", "Account");
+
+        bool passwordsMatch = await _userManager.CheckPasswordAsync(user, viewModel.NewPassword);
+
+        if (passwordsMatch)
+        {
+            ModelState.AddModelError(string.Empty, "New password must be different from the old password.");
+            return View(viewModel);
+        }
+
+        var result = await _userManager.ChangePasswordAsync(user, viewModel.CurrentPassword, viewModel.NewPassword);
+        
+        if (result.Succeeded) {
+            await _signInManager.RefreshSignInAsync(user);
+            return View("ChangePasswordConfirmation");
+        }
+        
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError("", error.Description);
+        }
+
+        return View(viewModel);
+    }
 }
