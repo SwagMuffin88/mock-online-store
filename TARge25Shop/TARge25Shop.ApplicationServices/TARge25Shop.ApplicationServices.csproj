@@ -5,6 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>TARge25Shop.ApplicationServices</RootNamespace>
+        <UserSecretsId>a0f8370a-466c-4502-8182-15654c6ba150</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>

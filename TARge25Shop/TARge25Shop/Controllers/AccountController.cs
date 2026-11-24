@@ -146,38 +146,43 @@ public class AccountController : Controller
     [AllowAnonymous]
     public async Task<IActionResult> Login(LoginViewModel viewModel, string? returnUrl)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
+            return View(viewModel);
+
+        var user = await _userManager.FindByEmailAsync(viewModel.Email);
+
+        if (user != null && !user.EmailConfirmed &&
+            (await _userManager.CheckPasswordAsync(user, viewModel.Password)))
         {
-            var user = await _userManager.FindByEmailAsync(viewModel.Email);
+            ModelState.AddModelError(string.Empty, "Email not confirmed yet");
+            return View(viewModel);
+        }
+        
+        var userNameToSignIn = user?.UserName ?? viewModel.Email;
 
-            if (user != null && !user.EmailConfirmed &&
-                (await _userManager.CheckPasswordAsync(user, viewModel.Password)))
-            {
-                ModelState.AddModelError(string.Empty, "Email not confirmed yet");
-                return View(viewModel);
-            }
-
-            var result = await _signInManager.PasswordSignInAsync(viewModel.Email, viewModel.Password, viewModel.RememberMe, true);
+        var result = await _signInManager.PasswordSignInAsync(
+            userNameToSignIn,
+            viewModel.Password,
+            viewModel.RememberMe,
+            lockoutOnFailure: true);
                 
-            if(result.Succeeded)
+        if(result.Succeeded)
+        {
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                {
-                    return Redirect(returnUrl);
-                }
-                
-                return RedirectToAction("Index", "Home");
+                return Redirect(returnUrl);
             }
-
-            if (result.IsLockedOut)
-            {
-                return View("AccountLocked");
-            }
-
-            ModelState.AddModelError("", "Invalid login Attempt");
+            
+            return RedirectToAction("Index", "Home");
         }
 
-        return View(viewModel);
+        if (result.IsLockedOut)
+        {
+            return View("AccountLocked");
+        }
+
+        ModelState.AddModelError("", "Invalid login Attempt");
+        return View("Login");
     }
     
     [HttpGet]

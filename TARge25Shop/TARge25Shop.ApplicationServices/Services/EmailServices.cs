@@ -77,10 +77,34 @@ public class EmailServices : IEmailServices
 
     public void SendEmailToken(EmailTokenDto dto, string token)
     {
+        var senderName = _config["EmailSettings:SenderName"] ?? "TARge25Shop";
+        var server = _config["EmailSettings:Server"];
+        var emailUser = _config["EmailSettings:Email"];
+        var password = _config["EmailSettings:Password"];
+        
+        if (string.IsNullOrEmpty(emailUser))
+        {
+            throw new Exception("Could not get sender value from configuration");
+        }
+
+        if (string.IsNullOrEmpty(dto.To))
+        {
+            throw new Exception("Recipient value cannot be empty");
+        }
+        
+        if (!string.IsNullOrWhiteSpace(token))
+        {
+            dto.Token = token;
+        }
+        
         dto.Token = token;
         var email = new MimeMessage();
-        email.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUserName").Value));
-        email.To.Add(MailboxAddress.Parse(dto.To));
+        
+        var from = new MailboxAddress(senderName, emailUser);
+        var to =  new MailboxAddress(SplitEmail(dto.To), dto.To);
+        
+        email.From.Add(from);
+        email.To.Add(to);
         email.Subject = dto.Subject;
 
         var builder = new BodyBuilder
@@ -92,9 +116,13 @@ public class EmailServices : IEmailServices
 
         using var smtp = new SmtpClient();
 
-        smtp.Connect(_config.GetSection("EmailHost").Value, 587, MailKit.Security.SecureSocketOptions.StartTls);
-        smtp.Authenticate(
-            _config.GetSection("EmailUserName").Value, _config.GetSection("EmailPassword").Value);
+        smtp.Connect(server, 
+            587, 
+            MailKit.Security.SecureSocketOptions.StartTls
+            );
+        
+        smtp.Authenticate(emailUser, password);
+        
         smtp.Send(email);
         smtp.Disconnect(true);
     }
