@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TARge25Shop.Core.Dto.account;
+using TARge25Shop.Core.Domain.Account;
 
 namespace TARge25Shop.Data;
 

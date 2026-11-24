@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace TARge25Shop.Core.Dto.account;
+namespace TARge25Shop.Core.Domain.Account;
 
 public class ApplicationUser : IdentityUser
 {

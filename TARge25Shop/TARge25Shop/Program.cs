@@ -5,7 +5,7 @@ using TARge25Shop.Data;
 using Microsoft.EntityFrameworkCore;
 using TARge25Shop.ApplicationServices;
 using TARge25Shop.ApplicationServices.Customs;
-using TARge25Shop.Core.Dto.account;
+using TARge25Shop.Core.Domain.Account;
 using TARge25Shop.Core.ServiceInterface;
 
 namespace TARge25Shop
